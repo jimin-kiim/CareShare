@@ -17,7 +17,7 @@ import { ThemeProvider } from "@react-navigation/native";
 import Firebase from "../config/firebase";
 export default function Home() {
     const postsRef = Firebase.firestore().collection("users").doc("posts");
-    const [posts, setPosts] = useState({});
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         loadPosts();
@@ -72,52 +72,206 @@ export default function Home() {
             </View>
             <ScrollView>
                 <View style={styles.post}>
-                    <Image />
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
                     <View style={styles.postContent}>
                         <Text style={styles.postTitle}>
                             환자 걷기 보조 재활기구
                         </Text>
-                        <View>
-                            <Text style={styles.postInfo}>노원구 공릉2동</Text>
-                            <Text style={styles.postInfo}>· 2일전</Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
                         </View>
                         <Text style={styles.postType}>빌려드려요</Text>
-                        <View>
+                        <View style={styles.postLastInfo}>
                             <Text style={styles.postPrice}>20,000원</Text>
-                            <Image />
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
                         </View>
                     </View>
                 </View>
-                {/* {posts
-                    ? posts.map((post, index) => {
-                          <View style={styles.post} key={index}>
-                              <Image />
+                <View style={styles.post}>
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContent}>
+                        <Text style={styles.postTitle}>
+                            환자 걷기 보조 재활기구
+                        </Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
+                        </View>
+                        <Text style={styles.postType}>빌려드려요</Text>
+                        <View style={styles.postLastInfo}>
+                            <Text style={styles.postPrice}>20,000원</Text>
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.post}>
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContent}>
+                        <Text style={styles.postTitle}>
+                            환자 걷기 보조 재활기구
+                        </Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
+                        </View>
+                        <Text style={styles.postType}>빌려드려요</Text>
+                        <View style={styles.postLastInfo}>
+                            <Text style={styles.postPrice}>20,000원</Text>
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.post}>
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContent}>
+                        <Text style={styles.postTitle}>
+                            환자 걷기 보조 재활기구
+                        </Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
+                        </View>
+                        <Text style={styles.postType}>빌려드려요</Text>
+                        <View style={styles.postLastInfo}>
+                            <Text style={styles.postPrice}>20,000원</Text>
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.post}>
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContent}>
+                        <Text style={styles.postTitle}>
+                            환자 걷기 보조 재활기구
+                        </Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
+                        </View>
+                        <Text style={styles.postType}>나눔해요</Text>
+                        <View style={styles.postLastInfo}>
+                            <Text style={styles.postPrice}>20,000원</Text>
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.post}>
+                    <Image
+                        source={require("../assets/test.jpeg")}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContent}>
+                        <Text style={styles.postTitle}>
+                            환자 걷기 보조 재활기구
+                        </Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                노원구 공릉2동
+                            </Text>
+                            <Text style={styles.postInfoText}> · 2일전</Text>
+                        </View>
+                        <Text style={styles.postType}>판매해요</Text>
+                        <View style={styles.postLastInfo}>
+                            <Text style={styles.postPrice}>20,000원</Text>
+                            <Image
+                                source={require("../assets/ios-heart-empty.svg")}
+                                style={styles.postHeart}
+                            />
+                        </View>
+                    </View>
+                </View>
+                {posts
+                    ? posts.map((post) => {
+                          <View style={styles.post} key={post.id}>
+                              <Image
+                                  source={require("../assets/test.jpeg")}
+                                  style={styles.postImg}
+                              />
                               <View style={styles.postContent}>
                                   <Text style={styles.postTitle}>
                                       {post.title}
                                   </Text>
-                                  <View>
-                                      <Text style={styles.postInfo}>
+                                  <View style={styles.postInfo}>
+                                      <Text style={styles.postInfoText}>
                                           {post.address}
                                       </Text>
-                                      <Text style={styles.postInfo}>
-                                          {post.date}
+                                      <Text style={styles.postInfoText}>
+                                          {" "}
+                                          · 2일전
                                       </Text>
                                   </View>
                                   <Text style={styles.postType}>
                                       {post.type}
                                   </Text>
-                                  <View>
+                                  <View style={styles.postLastInfo}>
                                       <Text style={styles.postPrice}>
-                                          {post.price}
+                                          {post.price}원
                                       </Text>
-                                      <Image />
+                                      <Image
+                                          source={require("../assets/ios-heart-empty.svg")}
+                                          style={styles.postHeart}
+                                      />
                                   </View>
                               </View>
                           </View>;
                       })
-                    : null} */}
+                    : null}
             </ScrollView>
+            <TouchableOpacity
+                style={{
+                    position: "absolute",
+                    zIndex: 1,
+                    // alignItems: "flex-end",
+                    // justifyContent: "flex-end",
+                }}
+            >
+                <Ionicons
+                    name="ios-add-circle"
+                    size={50}
+                    color={theme.yellow}
+                />
+            </TouchableOpacity>
         </View>
     );
 }
@@ -149,25 +303,53 @@ const styles = StyleSheet.create({
         height: 8,
         marginBottom: 3,
     },
-
+    post: {
+        flexDirection: "row",
+        paddingHorizontal: 25,
+        paddingTop: 25,
+    },
+    postContent: {
+        paddingLeft: 20,
+    },
+    postImg: {
+        width: 120,
+        height: 120,
+    },
     postTitle: {
-        fontSize: 18,
+        fontSize: 20,
         color: theme.textDark,
     },
     postInfo: {
+        flexDirection: "row",
+        paddingTop: 5,
+        paddingBottom: 17,
+    },
+    postInfoText: {
         fontSize: 15,
-        color: theme.iconGray,
+        color: theme.textLight,
     },
     postType: {
         fontSize: 15,
         color: theme.textDark,
-        borderRadius: 10,
+        borderRadius: 15,
         backgroundColor: "#EEEEEE",
-        padding: 5,
+        paddingVertical: 3,
+        paddingHorizontal: 11,
+        alignSelf: "flex-start",
+    },
+    postLastInfo: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     postPrice: {
         fontSize: 18,
         color: theme.textDark,
         fontWeight: "700",
+        paddingTop: 6,
+    },
+    postHeart: {
+        width: 20,
+        height: 18,
     },
 });
