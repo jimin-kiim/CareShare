@@ -4,25 +4,32 @@ import {
     Text,
     View,
     TouchableOpacity,
-    TextInput,
     ScrollView,
-    AsyncStorage,
-    Platform,
     Image,
+    Dimensions,
+    ImageBackground,
 } from "react-native";
 import { theme } from "../colors";
+// import { Overlay } from "react-native-elements";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { ThemeProvider } from "@react-navigation/native";
+// import { ThemeProvider } from "@react-navigation/native";
 import Firebase from "../config/firebase";
+// import { SafeAreaView } from "react-native-safe-area-context";
+
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+
 export default function Home() {
     const postsRef = Firebase.firestore().collection("users").doc("posts");
     const [posts, setPosts] = useState([]);
-
+    const [clicked, setClicked] = useState(false);
     useEffect(() => {
         loadPosts();
     }, []);
-
+    const buttonPressed = () => {
+        setClicked((current) => !current);
+        console.log("clicked", clicked);
+    };
     const loadPosts = async () => {
         try {
             const data = await postsRef.get();
@@ -258,25 +265,50 @@ export default function Home() {
                       })
                     : null}
             </ScrollView>
-            <TouchableOpacity
+
+            <View
                 style={{
-                    position: "absolute",
-                    zIndex: 1,
-                    // alignItems: "flex-end",
-                    // justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    justifyContent: "flex-end",
                 }}
             >
-                <Ionicons
-                    name="ios-add-circle"
-                    size={50}
-                    color={theme.yellow}
-                />
-            </TouchableOpacity>
+                {clicked ? (
+                    <View style={styles.newPostTexts}>
+                        <TouchableOpacity>
+                            <Text style={styles.newPostText}>빌려드려요</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.newPostText}>빌려요</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.newPostText}>나눔해요</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.newPostText}>판매해요</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
+                <TouchableOpacity
+                    style={styles.newPostButton}
+                    onPress={() => {
+                        buttonPressed();
+                    }}
+                >
+                    <Ionicons
+                        name="ios-add-circle"
+                        size={50}
+                        color={theme.yellow}
+                    />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        // flex: 1,
+    },
     header: {
         justifyContent: "space-between",
         flexDirection: "row",
@@ -284,6 +316,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         borderBottomColor: "#F5F5F5",
         borderBottomWidth: 1,
+        // zIndex: 10,
+        // position: "absolute",
     },
     headerFilter: {
         flexDirection: "row",
@@ -351,5 +385,28 @@ const styles = StyleSheet.create({
     postHeart: {
         width: 20,
         height: 18,
+    },
+    newPostTexts: {
+        position: "absolute",
+        zIndex: 1,
+        backgroundColor: "gray",
+        paddingHorizontal: 17,
+        paddingTop: 8,
+        paddingBottom: 13,
+        borderRadius: 10,
+        marginBottom: 120,
+        marginRight: 15,
+    },
+    newPostText: {
+        fontWeight: "600",
+        paddingTop: 6,
+        fontSize: 18,
+        color: theme.textDark,
+    },
+    newPostButton: {
+        position: "absolute",
+        zIndex: 1,
+        marginRight: 12,
+        marginBottom: 60,
     },
 });
