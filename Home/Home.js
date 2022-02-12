@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
     StyleSheet,
     Text,
@@ -10,14 +9,14 @@ import {
     ImageBackground,
 } from "react-native";
 import { theme } from "../colors";
-// import { Overlay } from "react-native-elements";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-// import { ThemeProvider } from "@react-navigation/native";
 import Firebase from "../config/firebase";
+import Post from "./components/Post";
+// import { Overlay } from "react-native-elements";
+// import { ThemeProvider } from "@react-navigation/native";
 // import { SafeAreaView } from "react-native-safe-area-context";
-
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+// const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function Home() {
     const postsRef = Firebase.firestore().collection("users").doc("posts");
@@ -33,12 +32,9 @@ export default function Home() {
     const loadPosts = async () => {
         try {
             const data = await postsRef.get();
-            // setPosts(data.map((post) => ({ ...post.data(), id: post.id })));
-            // console.log(posts);
-
             const postsFetched = [];
             data.docs.forEach((doc) => {
-                const data = post.data();
+                const data = doc.data();
                 postsFetched.push(data);
             });
             setPosts(postsFetched);
@@ -78,190 +74,51 @@ export default function Home() {
                 </View>
             </View>
             <ScrollView>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>빌려드려요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>빌려드려요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>빌려드려요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>빌려드려요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>나눔해요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <Image
-                        source={require("../assets/test.jpeg")}
-                        style={styles.postImg}
-                    />
-                    <View style={styles.postContent}>
-                        <Text style={styles.postTitle}>
-                            환자 걷기 보조 재활기구
-                        </Text>
-                        <View style={styles.postInfo}>
-                            <Text style={styles.postInfoText}>
-                                노원구 공릉2동
-                            </Text>
-                            <Text style={styles.postInfoText}> · 2일전</Text>
-                        </View>
-                        <Text style={styles.postType}>판매해요</Text>
-                        <View style={styles.postLastInfo}>
-                            <Text style={styles.postPrice}>20,000원</Text>
-                            <Image
-                                source={require("../assets/ios-heart-empty.svg")}
-                                style={styles.postHeart}
-                            />
-                        </View>
-                    </View>
-                </View>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="나눔해요"
+                    price="10,000"
+                ></Post>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="나눔해요"
+                    price="10,000"
+                ></Post>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="빌려요"
+                    price="30,000"
+                ></Post>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="판매해요"
+                    price="20,000"
+                ></Post>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="판매해요"
+                    price="20,000"
+                ></Post>
+                <Post
+                    title="환자 걷기 보조 재활기구"
+                    address="노원구 공릉2동"
+                    type="판매해요"
+                    price="20,000"
+                ></Post>
+
                 {posts
                     ? posts.map((post) => {
-                          <View style={styles.post} key={post.id}>
-                              <Image
-                                  source={require("../assets/test.jpeg")}
-                                  style={styles.postImg}
-                              />
-                              <View style={styles.postContent}>
-                                  <Text style={styles.postTitle}>
-                                      {post.title}
-                                  </Text>
-                                  <View style={styles.postInfo}>
-                                      <Text style={styles.postInfoText}>
-                                          {post.address}
-                                      </Text>
-                                      <Text style={styles.postInfoText}>
-                                          {" "}
-                                          · 2일전
-                                      </Text>
-                                  </View>
-                                  <Text style={styles.postType}>
-                                      {post.type}
-                                  </Text>
-                                  <View style={styles.postLastInfo}>
-                                      <Text style={styles.postPrice}>
-                                          {post.price}원
-                                      </Text>
-                                      <Image
-                                          source={require("../assets/ios-heart-empty.svg")}
-                                          style={styles.postHeart}
-                                      />
-                                  </View>
-                              </View>
-                          </View>;
+                          <Post
+                              title={post.title}
+                              address={post.address}
+                              type={post.type}
+                              price={post.price}
+                          ></Post>;
                       })
                     : null}
             </ScrollView>
@@ -337,55 +194,7 @@ const styles = StyleSheet.create({
         height: 8,
         marginBottom: 3,
     },
-    post: {
-        flexDirection: "row",
-        paddingHorizontal: 25,
-        paddingTop: 25,
-    },
-    postContent: {
-        paddingLeft: 20,
-    },
-    postImg: {
-        width: 120,
-        height: 120,
-    },
-    postTitle: {
-        fontSize: 20,
-        color: theme.textDark,
-    },
-    postInfo: {
-        flexDirection: "row",
-        paddingTop: 5,
-        paddingBottom: 17,
-    },
-    postInfoText: {
-        fontSize: 15,
-        color: theme.textLight,
-    },
-    postType: {
-        fontSize: 15,
-        color: theme.textDark,
-        borderRadius: 15,
-        backgroundColor: "#EEEEEE",
-        paddingVertical: 3,
-        paddingHorizontal: 11,
-        alignSelf: "flex-start",
-    },
-    postLastInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    postPrice: {
-        fontSize: 18,
-        color: theme.textDark,
-        fontWeight: "700",
-        paddingTop: 6,
-    },
-    postHeart: {
-        width: 20,
-        height: 18,
-    },
+
     newPostTexts: {
         position: "absolute",
         zIndex: 1,
