@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ThemeProvider } from 'react-native-elements';
 import './config/firebase';
@@ -7,6 +8,8 @@ export default function App() {
   return (
     <ThemeProvider>
       <RootNavigation />
+      <Home />
+      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }
