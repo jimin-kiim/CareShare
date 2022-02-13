@@ -1,37 +1,50 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../colors";
-import { StackScreenProps } from "@react-navigation/stack";
-
 import React, { useEffect, useState } from "react";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+export default function PostDetail({ route }) {
+    const firestore = getFirestore();
+    const [content, setContent] = useState({});
 
-export default function PostDetail({
-    id,
-    title,
-    content,
-    address,
-    type,
-    price,
-}) {
+    useEffect(() => {
+        loadPost();
+    }, []);
+
+    const loadPost = async () => {
+        try {
+            const id = route.params.key;
+            const docRef = doc(firestore, "posts", id);
+            const postRef = await getDoc(docRef);
+            const post = postRef.data();
+            console.log(post);
+            setContent(post);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     return (
-        <View style={styles.post} key={id}>
+        <View style={styles.post}>
             <Image
                 source={require("../assets/test.jpeg")}
                 style={styles.postImg}
             />
             <View style={styles.postContent}>
-                <Text style={styles.postTitle}>{title}</Text>
+                <Text style={styles.postTitle}>{content.title}</Text>
                 <View style={styles.postInfo}>
-                    <Text style={styles.postInfoText}>{address}</Text>
+                    <Text style={styles.postInfoText}>{content.address}</Text>
                     <Text style={styles.postInfoText}> · 2일전</Text>
                 </View>
-                <Text style={styles.postType}>{type}</Text>
+                <Text style={styles.postType}>{content.type}</Text>
                 <View style={styles.postLastInfo}>
-                    <Text style={styles.postPrice}>{price}원</Text>
+                    <Text style={styles.postPrice}>{content.price} 원</Text>
                     <Image
                         source={require("../assets/ios-heart-empty.svg")}
                         style={styles.postHeart}
                     />
                 </View>
+                <TouchableOpacity>
+                    <Text>삭제</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

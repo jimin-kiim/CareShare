@@ -21,7 +21,7 @@ const NewPost = ({ text, navigation }) => {
 };
 
 const Home = ({ navigation }) => {
-    const firebase = getFirestore();
+    const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
 
@@ -35,13 +35,14 @@ const Home = ({ navigation }) => {
 
     const loadPosts = async () => {
         try {
-            const postDoc = await getDocs(collection(firebase, "posts"));
+            const postDoc = await getDocs(collection(firestore, "posts"));
             const postsFetched = [];
             postDoc.forEach((doc) => {
                 const data = doc.data();
-                postsFetched.push(data);
+                postsFetched.push({ ...data, key: doc.id });
             });
             setPosts(postsFetched);
+            console.log(postsFetched);
         } catch (error) {
             console.log(error.message);
         }
@@ -79,8 +80,8 @@ const Home = ({ navigation }) => {
                 {posts
                     ? posts.map((post) => (
                           <Post
-                              key={post.id}
-                              id={post.id}
+                              key={post.key}
+                              id={post.key}
                               title={post.title}
                               address={post.address}
                               type={post.type}

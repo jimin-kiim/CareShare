@@ -40,7 +40,7 @@ export default function PostForm({ navigation }) {
                 ...content,
             });
             console.log("Create Complete!");
-            navigation.navigate("PostDetail");
+            navigation.navigate("PostDetail", { id: id });
         } catch (error) {
             console.log(error.message);
         }
@@ -119,23 +119,5 @@ const styles = StyleSheet.create({
     button: {
         marginHorizontal: 30,
         borderRadius: 15,
-    },
-    postTitle: {
-        fontSize: 20,
-        color: theme.textDark,
-    },
-
-    postInfoText: {
-        fontSize: 15,
-        color: theme.textLight,
-    },
-    postType: {
-        fontSize: 15,
-        color: theme.textDark,
-        borderRadius: 15,
-        backgroundColor: "#EEEEEE",
-        paddingVertical: 3,
-        paddingHorizontal: 11,
-        alignSelf: "flex-start",
     },
 });

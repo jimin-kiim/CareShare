@@ -4,16 +4,21 @@ import { theme } from "../../colors";
 import React from "react";
 
 export default function Post({ id, title, address, type, price, navigation }) {
-    console.log(id, title, address, type, "got!");
     return (
         <View style={styles.post} key={id}>
-            <Image
-                source={require("../../assets/test.jpeg")}
-                style={styles.postImg}
-            />
+            <TouchableOpacity
+                onPress={() => navigation.navigate("PostDetail", { key: id })}
+            >
+                <Image
+                    source={require("../../assets/test.jpeg")}
+                    style={styles.postImg}
+                />
+            </TouchableOpacity>
             <View style={styles.postContent}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("PostDetail")}
+                    onPress={() =>
+                        navigation.navigate("PostDetail", { key: id })
+                    }
                 >
                     <Text style={styles.postTitle}>{title}</Text>
                 </TouchableOpacity>
