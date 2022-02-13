@@ -4,15 +4,28 @@ import { StackScreenProps } from "@react-navigation/stack";
 
 import React, { useEffect, useState } from "react";
 
-const PostDetail = ({ id, title, address, type, price }) => {
-  return (
-    <View style={styles.post} key={id}>
-      <Image source={require("../assets/test.jpeg")} style={styles.postImg} />
-      <View style={styles.postContent}>
-        <Text style={styles.postTitle}>{title}</Text>
-        <View style={styles.postInfo}>
-          <Text style={styles.postInfoText}>{address}</Text>
-          <Text style={styles.postInfoText}> · 2일전</Text>
+export default function Post({ id, title, content, address, type, price }) {
+    return (
+        <View style={styles.post} key={id}>
+            <Image
+                source={require("../assets/test.jpeg")}
+                style={styles.postImg}
+            />
+            <View style={styles.postContent}>
+                <Text style={styles.postTitle}>{title}</Text>
+                <View style={styles.postInfo}>
+                    <Text style={styles.postInfoText}>{address}</Text>
+                    <Text style={styles.postInfoText}> · 2일전</Text>
+                </View>
+                <Text style={styles.postType}>{type}</Text>
+                <View style={styles.postLastInfo}>
+                    <Text style={styles.postPrice}>{price}원</Text>
+                    <Image
+                        source={require("../assets/ios-heart-empty.svg")}
+                        style={styles.postHeart}
+                    />
+                </View>
+            </View>
         </View>
         <Text style={styles.postType}>{type}</Text>
         <View style={styles.postLastInfo}>
