@@ -9,13 +9,17 @@ import PostDetail from "../Home/PostDetail";
 const Stack = createStackNavigator();
 
 export default function UserStack() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="PostDetail" component={PostDetail} />
-        <Stack.Screen name="NewPost" component={PostForm} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerMode: "none",
+                }}
+            >
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="PostDetail" component={PostDetail} />
+                <Stack.Screen name="NewPost" component={PostForm} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }

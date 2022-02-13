@@ -7,15 +7,23 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ScrollView,
-    Image,
-    Dimensions,
-    ImageBackground,
     TextInput,
     Button,
 } from "react-native";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
 export default function PostForm({ navigation }) {
-    const [text, setText] = useState("");
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const [address, setAddress] = useState("");
+    const [type, setType] = useState("");
+    const [price, setPrice] = useState("");
     const [content, setContent] = useState({
         id: Date.now(),
         title: "",
@@ -24,79 +32,99 @@ export default function PostForm({ navigation }) {
         type: "",
         price: "",
     });
-
-    const addDoc = Firebase.firestore().collection("users").doc("posts");
+    const firebase = getFirestore();
 
     const savePost = async () => {
         try {
-            await addDoc.add({
+            addDoc(collection(firebase, "posts"), {
                 ...content,
             });
             console.log("Create Complete!");
+            navigation.navigate("PostDetail");
         } catch (error) {
             console.log(error.message);
         }
     };
-    const onChangeText = (payload) => setText(payload);
     return (
-        <View>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, title: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() =>
-                    setContent({ ...content, content: text })
-                }
-                onChangeText={onChangeText}
-                value={text}
-                multiline={true}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() =>
-                    setContent({ ...content, address: text })
-                }
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, type: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, price: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <Button onPress={() => savePost}></Button>
+        <View style={styles.formContainer}>
+            <View style={styles.itemContainer}>
+                <Text>제목 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() => setContent({ ...content, title: title })}
+                    onChangeText={(payload) => setTitle(payload)}
+                    value={title}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>내용 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() => setContent({ ...content, content: desc })}
+                    onChangeText={(payload) => setDesc(payload)}
+                    value={desc}
+                    multiline={true}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>주소 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() => setContent({ ...content, address: address })}
+                    onChangeText={(payload) => setAddress(payload)}
+                    value={address}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>타입 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() => setContent({ ...content, type: type })}
+                    onChangeText={(payload) => setType(payload)}
+                    value={type}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>가격 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() => setContent({ ...content, price: price })}
+                    onChangeText={(payload) => setPrice(payload)}
+                    value={price}
+                ></TextInput>
+            </View>
+            <Button
+                title="저장"
+                style={styles.button}
+                onPress={() => savePost()}
+            ></Button>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    post: {
+    formContainer: {
+        marginTop: 30,
+    },
+    itemContainer: {
         flexDirection: "row",
-        paddingHorizontal: 25,
-        paddingTop: 25,
+        paddingHorizontal: 20,
+        paddingTop: 20,
     },
-    postContent: {
-        paddingLeft: 20,
+    textInput: {
+        borderColor: theme.textDark,
+        borderRadius: 15,
+        borderWidth: 1,
     },
-    postImg: {
-        width: 120,
-        height: 120,
+    button: {
+        marginHorizontal: 30,
+        borderRadius: 15,
     },
     postTitle: {
         fontSize: 20,
         color: theme.textDark,
     },
-    postInfo: {
-        flexDirection: "row",
-        paddingTop: 5,
-        paddingBottom: 17,
-    },
+
     postInfoText: {
         fontSize: 15,
         color: theme.textLight,
@@ -109,20 +137,5 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         paddingHorizontal: 11,
         alignSelf: "flex-start",
-    },
-    postLastInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    postPrice: {
-        fontSize: 18,
-        color: theme.textDark,
-        fontWeight: "700",
-        paddingTop: 6,
-    },
-    postHeart: {
-        width: 20,
-        height: 18,
     },
 });

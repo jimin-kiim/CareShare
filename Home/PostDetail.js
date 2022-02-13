@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         paddingHorizontal: 25,
         paddingTop: 25,
+        marginTop: 30,
     },
     postContent: {
         paddingLeft: 20,
