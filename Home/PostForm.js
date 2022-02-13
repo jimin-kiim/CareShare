@@ -1,33 +1,73 @@
 import { useEffect, useState } from "react";
-import Movie from "../components/Movie";
-export default function PostForm() {
-    const [loading, setLoading] = useState(true);
-    const [movies, setMovies] = useState([]);
+import Firebase from "../config/firebase";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ScrollView,
+    Image,
+    Dimensions,
+    ImageBackground,
+    TextInput,
+} from "react-native";
+export default function PostForm({ navigation }) {
+    const [text, setText] = useState("");
+    const [content, setContent] = useState({
+        id: Date.now(),
+        title: "",
+        content: "",
+        address: "",
+        type: "",
+        price: "",
+    });
 
-    useEffect(() => {
-        getMovies();
-    }, []);
+    const addDoc = Firebase.firestore().collection("users").doc("posts");
+
+    const savePost = async () => {
+        try {
+            await addDoc.add({
+                ...content,
+            });
+            console.log("Create Complete!");
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+    const onChangeText = (payload) => setText(payload);
     return (
-        <View style={styles.post} key={id}>
-            <Image
-                source={require("../../assets/test.jpeg")}
-                style={styles.postImg}
-            />
-            <View style={styles.postContent}>
-                <Text style={styles.postTitle}>{title}</Text>
-                <View style={styles.postInfo}>
-                    <Text style={styles.postInfoText}>{address}</Text>
-                    <Text style={styles.postInfoText}> · 2일전</Text>
-                </View>
-                <Text style={styles.postType}>{type}</Text>
-                <View style={styles.postLastInfo}>
-                    <Text style={styles.postPrice}>{price}원</Text>
-                    <Image
-                        source={require("../../assets/ios-heart-empty.svg")}
-                        style={styles.postHeart}
-                    />
-                </View>
-            </View>
+        <View>
+            <TextInput
+                onSubmitEditing={() => setContent({ ...content, title: text })}
+                onChangeText={onChangeText}
+                value={text}
+            ></TextInput>
+            <TextInput
+                onSubmitEditing={() =>
+                    setContent({ ...content, content: text })
+                }
+                onChangeText={onChangeText}
+                value={text}
+                multiline={true}
+            ></TextInput>
+            <TextInput
+                onSubmitEditing={() =>
+                    setContent({ ...content, address: text })
+                }
+                onChangeText={onChangeText}
+                value={text}
+            ></TextInput>
+            <TextInput
+                onSubmitEditing={() => setContent({ ...content, type: text })}
+                onChangeText={onChangeText}
+                value={text}
+            ></TextInput>
+            <TextInput
+                onSubmitEditing={() => setContent({ ...content, price: text })}
+                onChangeText={onChangeText}
+                value={text}
+            ></TextInput>
+            <Button onPress={() => savePost}></Button>
         </View>
     );
 }

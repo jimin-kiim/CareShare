@@ -3,7 +3,7 @@ import { theme } from "../../colors";
 
 import React, { useEffect, useState } from "react";
 
-export default function Post({ id, title, address, type, price }) {
+export default function Post({ id, title, content, address, type, price }) {
     return (
         <View style={styles.post} key={id}>
             <Image
