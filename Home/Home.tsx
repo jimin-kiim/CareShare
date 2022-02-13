@@ -5,20 +5,21 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
-    Dimensions,
-    ImageBackground,
 } from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Firebase from "../config/firebase";
 import Post from "./components/Post";
-// import { Overlay } from "react-native-elements";
-// import { ThemeProvider } from "@react-navigation/native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
-export default function Home() {
+const NewPostText = ({ text, navigation }) => {
+    return (
+        <TouchableOpacity onPress={() => navigation.navigate("NewPost")}>
+            <Text style={styles.newPostText}>{text}</Text>
+        </TouchableOpacity>
+    );
+};
+const Home = ({ navigation }) => {
     const postsRef = Firebase.firestore().collection("users").doc("posts");
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
@@ -55,6 +56,7 @@ export default function Home() {
                         <Text style={styles.headerFilterText}>전체</Text>
                     </TouchableOpacity>
                 </View>
+
                 <View style={styles.headerIcons}>
                     <TouchableOpacity>
                         <Ionicons
@@ -75,49 +77,55 @@ export default function Home() {
             </View>
             <ScrollView>
                 <Post
+                    id="1"
                     title="환자 걷기 보조 재활기구"
                     address="노원구 공릉2동"
                     type="나눔해요"
                     price="10,000"
+                    navigation={navigation}
                 ></Post>
                 <Post
+                    id="1"
                     title="환자 걷기 보조 재활기구"
                     address="노원구 공릉2동"
                     type="나눔해요"
                     price="10,000"
+                    navigation={navigation}
                 ></Post>
                 <Post
+                    id="1"
                     title="환자 걷기 보조 재활기구"
                     address="노원구 공릉2동"
                     type="빌려요"
                     price="30,000"
+                    navigation={navigation}
                 ></Post>
                 <Post
+                    id="1"
                     title="환자 걷기 보조 재활기구"
                     address="노원구 공릉2동"
                     type="판매해요"
                     price="20,000"
+                    navigation={navigation}
                 ></Post>
                 <Post
+                    id="1"
                     title="환자 걷기 보조 재활기구"
                     address="노원구 공릉2동"
                     type="판매해요"
                     price="20,000"
-                ></Post>
-                <Post
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="판매해요"
-                    price="20,000"
+                    navigation={navigation}
                 ></Post>
 
                 {posts
                     ? posts.map((post) => {
                           <Post
+                              id={post.id}
                               title={post.title}
                               address={post.address}
                               type={post.type}
                               price={post.price}
+                              navigation={navigation}
                           ></Post>;
                       })
                     : null}
@@ -131,18 +139,13 @@ export default function Home() {
             >
                 {clicked ? (
                     <View style={styles.newPostTexts}>
-                        <TouchableOpacity>
-                            <Text style={styles.newPostText}>빌려드려요</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style={styles.newPostText}>빌려요</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style={styles.newPostText}>나눔해요</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style={styles.newPostText}>판매해요</Text>
-                        </TouchableOpacity>
+                        <NewPostText
+                            text="빌려드려요"
+                            navigation={navigation}
+                        />
+                        <NewPostText text="빌려요" navigation={navigation} />
+                        <NewPostText text="나눔해요" navigation={navigation} />
+                        <NewPostText text="판매해요" navigation={navigation} />
                     </View>
                 ) : null}
                 <TouchableOpacity
@@ -160,7 +163,7 @@ export default function Home() {
             </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -219,3 +222,5 @@ const styles = StyleSheet.create({
         marginBottom: 60,
     },
 });
+
+export default Home;
