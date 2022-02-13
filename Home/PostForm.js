@@ -38,9 +38,9 @@ export default function PostForm({ navigation }) {
         try {
             addDoc(collection(firebase, "posts"), {
                 ...content,
+            }).then((docRef) => {
+                navigation.navigate("PostDetail", { key: docRef.id });
             });
-            console.log("Create Complete!");
-            navigation.navigate("PostDetail", { id: id });
         } catch (error) {
             console.log(error.message);
         }
