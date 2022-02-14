@@ -18,7 +18,7 @@ export default function UserStack() {
             >
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="PostDetail" component={PostDetail} />
-                <Stack.Screen name="NewPost" component={PostForm} />
+                <Stack.Screen name="PostForm" component={PostForm} />
             </Stack.Navigator>
         </NavigationContainer>
     );

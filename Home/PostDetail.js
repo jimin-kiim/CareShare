@@ -2,15 +2,17 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function PostDetail({ route, navigation }) {
     const firestore = getFirestore();
     const [content, setContent] = useState({});
     const id = route.params.key;
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         loadPost();
-    }, []);
+    }, [isFocused]);
 
     const loadPost = async () => {
         try {
@@ -23,6 +25,11 @@ export default function PostDetail({ route, navigation }) {
             console.log(error.message);
         }
     };
+
+    const updatePost = () => {
+        navigation.navigate("PostForm", { key: id });
+    };
+
     const deletePost = async () => {
         const ok = window.confirm("Are you sure you want to delete this post?");
         if (ok) {
@@ -51,6 +58,9 @@ export default function PostDetail({ route, navigation }) {
                         style={styles.postHeart}
                     />
                 </View>
+                <TouchableOpacity onPress={() => updatePost(id)}>
+                    <Text>수정</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => deletePost(id)}>
                     <Text>삭제</Text>
                 </TouchableOpacity>

@@ -14,33 +14,61 @@ import {
     getFirestore,
     collection,
     addDoc,
-    getDocs,
+    getDoc,
     doc,
     updateDoc,
 } from "firebase/firestore";
-export default function PostForm({ navigation }) {
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
-    const [address, setAddress] = useState("");
-    const [type, setType] = useState("");
-    const [price, setPrice] = useState("");
+
+export default function PostForm({ route, navigation }) {
+    const firestore = getFirestore();
     const [content, setContent] = useState({
-        id: Date.now(),
         title: "",
         content: "",
         address: "",
         type: "",
         price: "",
     });
+
     const firebase = getFirestore();
+    if (route.params) {
+        const id = route.params.key;
+        useEffect(() => {
+            loadPost();
+        }, []);
+        const loadPost = async () => {
+            try {
+                const docRef = doc(firestore, "posts", id);
+                const postRef = await getDoc(docRef);
+                const post = postRef.data();
+                setContent({
+                    title: post.title,
+                    content: post.content,
+                    address: post.address,
+                    type: post.type,
+                    price: post.price,
+                });
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+    }
 
     const savePost = async () => {
         try {
-            addDoc(collection(firebase, "posts"), {
-                ...content,
-            }).then((docRef) => {
-                navigation.navigate("PostDetail", { key: docRef.id });
-            });
+            if (route.params) {
+                const id = route.params.key;
+                updateDoc(doc(firestore, "posts", id), {
+                    ...content,
+                }).then(() => {
+                    navigation.navigate("PostDetail", { key: id });
+                });
+            } else {
+                addDoc(collection(firebase, "posts"), {
+                    ...content,
+                }).then((docRef) => {
+                    navigation.navigate("PostDetail", { key: docRef.id });
+                });
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -51,18 +79,26 @@ export default function PostForm({ navigation }) {
                 <Text>제목 : </Text>
                 <TextInput
                     style={styles.textInput}
-                    onBlur={() => setContent({ ...content, title: title })}
-                    onChangeText={(payload) => setTitle(payload)}
-                    value={title}
+                    onBlur={() =>
+                        setContent({ ...content, title: content.title })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, title: payload })
+                    }
+                    value={content.title}
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
                 <Text>내용 : </Text>
                 <TextInput
                     style={styles.textInput}
-                    onBlur={() => setContent({ ...content, content: desc })}
-                    onChangeText={(payload) => setDesc(payload)}
-                    value={desc}
+                    onBlur={() =>
+                        setContent({ ...content, content: content.content })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, content: payload })
+                    }
+                    value={content.desc}
                     multiline={true}
                 ></TextInput>
             </View>
@@ -70,27 +106,39 @@ export default function PostForm({ navigation }) {
                 <Text>주소 : </Text>
                 <TextInput
                     style={styles.textInput}
-                    onBlur={() => setContent({ ...content, address: address })}
-                    onChangeText={(payload) => setAddress(payload)}
-                    value={address}
+                    onBlur={() =>
+                        setContent({ ...content, address: content.address })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, address: payload })
+                    }
+                    value={content.address}
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
                 <Text>타입 : </Text>
                 <TextInput
                     style={styles.textInput}
-                    onBlur={() => setContent({ ...content, type: type })}
-                    onChangeText={(payload) => setType(payload)}
-                    value={type}
+                    onBlur={() =>
+                        setContent({ ...content, type: content.type })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, type: payload })
+                    }
+                    value={content.type}
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
                 <Text>가격 : </Text>
                 <TextInput
                     style={styles.textInput}
-                    onBlur={() => setContent({ ...content, price: price })}
-                    onChangeText={(payload) => setPrice(payload)}
-                    value={price}
+                    onBlur={() =>
+                        setContent({ ...content, price: content.price })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, price: payload })
+                    }
+                    value={content.price}
                 ></TextInput>
             </View>
             <Button

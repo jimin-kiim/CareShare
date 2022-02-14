@@ -15,7 +15,7 @@ import Post from "./components/Post";
 
 const NewPost = ({ text, navigation }) => {
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("NewPost")}>
+        <TouchableOpacity onPress={() => navigation.navigate("PostForm")}>
             <Text style={styles.newPostText}>{text}</Text>
         </TouchableOpacity>
     );
