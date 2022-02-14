@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-export default function PostDetail({ route }) {
+import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
+
+export default function PostDetail({ route, navigation }) {
     const firestore = getFirestore();
     const [content, setContent] = useState({});
+    const id = route.params.key;
 
     useEffect(() => {
         loadPost();
@@ -12,7 +14,6 @@ export default function PostDetail({ route }) {
 
     const loadPost = async () => {
         try {
-            const id = route.params.key;
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
@@ -20,6 +21,14 @@ export default function PostDetail({ route }) {
             setContent(post);
         } catch (error) {
             console.log(error.message);
+        }
+    };
+    const deletePost = async () => {
+        const ok = window.confirm("Are you sure you want to delete this post?");
+        if (ok) {
+            await deleteDoc(doc(firestore, "posts", id)).then(() => {
+                navigation.navigate("Home");
+            });
         }
     };
     return (
@@ -42,7 +51,7 @@ export default function PostDetail({ route }) {
                         style={styles.postHeart}
                     />
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => deletePost(id)}>
                     <Text>삭제</Text>
                 </TouchableOpacity>
             </View>

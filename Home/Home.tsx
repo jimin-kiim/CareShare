@@ -6,6 +6,7 @@ import {
     ScrollView,
     Image,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
@@ -24,10 +25,10 @@ const Home = ({ navigation }) => {
     const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
-
+    const isFocused = useIsFocused();
     useEffect(() => {
         loadPosts();
-    }, []);
+    }, [isFocused]);
 
     const buttonPressed = () => {
         setClicked((current) => !current);

@@ -7,7 +7,9 @@ export default function Post({ id, title, address, type, price, navigation }) {
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
-                onPress={() => navigation.navigate("PostDetail", { key: id })}
+                onPress={() =>
+                    navigation.navigate("PostDetail", { key: id, navigation })
+                }
             >
                 <Image
                     source={require("../../assets/test.jpeg")}
