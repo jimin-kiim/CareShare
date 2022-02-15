@@ -19,7 +19,12 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.careshare.CareShare",
-      googleServicesFile: "./GoogleService-Info.plist"
+      googleServicesFile: "./GoogleService-Info.plist",
+      config: {
+        googleSignIn: {
+          reversedClientId: process.env.REVERSED_CLIENT_ID
+        }
+      }
     },
     android: {
       adaptiveIcon: {
@@ -27,7 +32,12 @@ export default {
         backgroundColor: "#FFFFFF"
       },
       package: "com.careshare.CareShare",
-      googleServicesFile: "./google-services.json"
+      googleServicesFile: "./google-services.json",
+      config: {
+        googleSignIn: {
+          certificateHash: process.env.CERTIFICATE_HASH
+        }
+      }
     },
     web: {
       favicon: "./assets/favicon.png"

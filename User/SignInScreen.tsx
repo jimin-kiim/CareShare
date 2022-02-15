@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import * as GoogleSignIn from 'expo-google-sign-in';
 
 const auth = getAuth();
 
@@ -12,6 +13,55 @@ const SignInScreen = () => {
     password: '',
     error: ''
   })
+
+  const [state, setState] = React.useState({ user: null });
+
+  const componentDidMount = () => {
+    googleInitAsync();
+  }
+
+  const googleInitAsync = async () => {
+    try {
+      await GoogleSignIn.initAsync({
+        // You may ommit the clientId when the firebase `googleServicesFile` is configured
+        clientId: process.env.CLIENT_ID,
+        // Provide other custom options...
+      });
+    } catch ({ message }) {
+      alert('GoogleSignIn.initAsync(): ' + message);
+    }
+    googleSyncUserWithStateAsync();
+  };
+
+  const googleSyncUserWithStateAsync = async () => {
+    const user = await GoogleSignIn.signInSilentlyAsync();
+    setState({ user });
+  };
+
+  const googleSignOutAsync = async () => {
+    await GoogleSignIn.signOutAsync();
+    setState({ user: null });
+  };
+
+  const googleSignInAsync = async () => {
+    try {
+      await GoogleSignIn.askForPlayServicesAsync();
+      const { type, user } = await GoogleSignIn.signInAsync();
+      if (type === 'success') {
+        googleSyncUserWithStateAsync();
+      }
+    } catch ({ message }) {
+      alert('login: Error:' + message);
+    }
+  };
+
+  const onPress = () => {
+    if (state.user) {
+      googleSignOutAsync();
+    } else {
+      googleSignInAsync();
+    }
+  };
 
   async function signIn() {
     if (value.email === '' || value.password === '') {
@@ -61,6 +111,7 @@ const SignInScreen = () => {
           autoCompleteType={undefined}        />
 
         <Button title="Sign in" buttonStyle={styles.control} onPress={signIn} />
+        <Text onPress={onPress}>Google Auth</Text>
       </View>
     </View>
   );

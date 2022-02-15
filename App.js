@@ -8,7 +8,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <RootNavigation />
-      <StatusBar style="auto" />
+      {/* <StatusBar style="auto" /> */}
     </ThemeProvider>
   );
 }
