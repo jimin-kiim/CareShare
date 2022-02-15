@@ -31,8 +31,13 @@ export default function PostForm({ route, navigation }) {
 
     const firebase = getFirestore();
     useEffect(() => {
-        if (route.params) {
+        if (route.params.key) {
             loadPost(route.params.key);
+        } else {
+            setContent({
+                ...content,
+                type: route.params.text,
+            });
         }
         return () => {
             console.log("unmount form");
@@ -48,7 +53,7 @@ export default function PostForm({ route, navigation }) {
                 title: post.title,
                 content: post.content,
                 address: post.address,
-                type: post.type,
+                type: post.text,
                 price: post.price,
             });
         } catch (error) {
@@ -58,7 +63,7 @@ export default function PostForm({ route, navigation }) {
 
     const savePost = async () => {
         try {
-            if (route.params) {
+            if (route.params.key) {
                 const id = route.params.key;
                 updateDoc(doc(firestore, "posts", id), {
                     ...content,
