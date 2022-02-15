@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
+    DeviceEventEmitter,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -25,10 +26,15 @@ const Home = ({ navigation }) => {
     const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
-    const isFocused = useIsFocused();
     useEffect(() => {
         loadPosts();
-    }, [isFocused]);
+        DeviceEventEmitter.addListener("toHome", () => {
+            loadPosts();
+        });
+        return () => {
+            DeviceEventEmitter.emit("toDetail");
+        };
+    }, []);
 
     const buttonPressed = () => {
         setClicked((current) => !current);
@@ -164,7 +170,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 13,
         borderRadius: 10,
-        marginBottom: 600,
+        // marginBottom: 600,
         marginRight: 15,
     },
     newPostText: {
@@ -177,7 +183,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 1,
         marginRight: 12,
-        paddingBottom: 200,
+        // paddingBottom: 200,
     },
 });
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Firebase from "../config/firebase";
 import { theme } from "../colors";
 
 import {
@@ -9,6 +8,7 @@ import {
     TouchableOpacity,
     TextInput,
     Button,
+    DeviceEventEmitter,
 } from "react-native";
 import {
     getFirestore,
@@ -30,28 +30,31 @@ export default function PostForm({ route, navigation }) {
     });
 
     const firebase = getFirestore();
-    if (route.params) {
-        const id = route.params.key;
-        useEffect(() => {
-            loadPost();
-        }, []);
-        const loadPost = async () => {
-            try {
-                const docRef = doc(firestore, "posts", id);
-                const postRef = await getDoc(docRef);
-                const post = postRef.data();
-                setContent({
-                    title: post.title,
-                    content: post.content,
-                    address: post.address,
-                    type: post.type,
-                    price: post.price,
-                });
-            } catch (error) {
-                console.log(error.message);
-            }
+    useEffect(() => {
+        if (route.params) {
+            loadPost(route.params.key);
+        }
+        return () => {
+            console.log("unmount form");
         };
-    }
+    }, []);
+
+    const loadPost = async (id) => {
+        try {
+            const docRef = doc(firestore, "posts", id);
+            const postRef = await getDoc(docRef);
+            const post = postRef.data();
+            setContent({
+                title: post.title,
+                content: post.content,
+                address: post.address,
+                type: post.type,
+                price: post.price,
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     const savePost = async () => {
         try {
@@ -61,6 +64,8 @@ export default function PostForm({ route, navigation }) {
                     ...content,
                 }).then(() => {
                     navigation.navigate("PostDetail", { key: id });
+                    DeviceEventEmitter.emit("toDetail");
+                    console.log("edit complete");
                 });
             } else {
                 addDoc(collection(firebase, "posts"), {
@@ -98,7 +103,7 @@ export default function PostForm({ route, navigation }) {
                     onChangeText={(payload) =>
                         setContent({ ...content, content: payload })
                     }
-                    value={content.desc}
+                    value={content.content}
                     multiline={true}
                 ></TextInput>
             </View>

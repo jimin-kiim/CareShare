@@ -1,25 +1,35 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    DeviceEventEmitter,
+} from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
-import { useIsFocused } from "@react-navigation/native";
 
 export default function PostDetail({ route, navigation }) {
     const firestore = getFirestore();
     const [content, setContent] = useState({});
     const id = route.params.key;
-    const isFocused = useIsFocused();
-
     useEffect(() => {
         loadPost();
-    }, [isFocused]);
+        DeviceEventEmitter.addListener("toDetail", () => {
+            loadPost();
+        });
+        return () => {
+            console.log("unmount detail");
+            DeviceEventEmitter.emit("toHome");
+        };
+    }, []);
 
     const loadPost = async () => {
         try {
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
-            console.log(post);
             setContent(post);
         } catch (error) {
             console.log(error.message);
@@ -51,6 +61,7 @@ export default function PostDetail({ route, navigation }) {
                     <Text style={styles.postInfoText}> · 2일전</Text>
                 </View>
                 <Text style={styles.postType}>{content.type}</Text>
+                <Text style={styles.postType}>{content.content}</Text>
                 <View style={styles.postLastInfo}>
                     <Text style={styles.postPrice}>{content.price} 원</Text>
                     <Image
