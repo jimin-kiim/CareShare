@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { theme } from "../colors";
-
 import {
     StyleSheet,
     Text,
@@ -29,7 +28,6 @@ export default function PostForm({ route, navigation }) {
         price: "",
     });
 
-    const firebase = getFirestore();
     useEffect(() => {
         if (route.params.key) {
             loadPost(route.params.key);
@@ -38,6 +36,7 @@ export default function PostForm({ route, navigation }) {
                 ...content,
                 type: route.params.text,
             });
+            console.log(content);
         }
         return () => {
             console.log("unmount form");
@@ -49,13 +48,15 @@ export default function PostForm({ route, navigation }) {
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
+            console.log(post);
             setContent({
                 title: post.title,
                 content: post.content,
                 address: post.address,
-                type: post.text,
+                type: post.type,
                 price: post.price,
             });
+            console.log(content);
         } catch (error) {
             console.log(error.message);
         }
@@ -73,7 +74,7 @@ export default function PostForm({ route, navigation }) {
                     console.log("edit complete");
                 });
             } else {
-                addDoc(collection(firebase, "posts"), {
+                addDoc(collection(firestore, "posts"), {
                     ...content,
                 }).then((docRef) => {
                     navigation.navigate("PostDetail", { key: docRef.id });

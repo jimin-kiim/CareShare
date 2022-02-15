@@ -14,6 +14,7 @@ export default function PostDetail({ route, navigation }) {
     const firestore = getFirestore();
     const [content, setContent] = useState({});
     const id = route.params.key;
+
     useEffect(() => {
         loadPost();
         DeviceEventEmitter.addListener("toDetail", () => {
@@ -69,12 +70,14 @@ export default function PostDetail({ route, navigation }) {
                         style={styles.postHeart}
                     />
                 </View>
+                {/* <View> */}
                 <TouchableOpacity onPress={() => updatePost(id)}>
                     <Text>수정</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => deletePost(id)}>
                     <Text>삭제</Text>
                 </TouchableOpacity>
+                {/* </View> */}
             </View>
         </View>
     );
