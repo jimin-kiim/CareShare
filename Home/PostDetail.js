@@ -5,11 +5,12 @@ import {
     Image,
     TouchableOpacity,
     DeviceEventEmitter,
+    Alert,
+    Platform,
 } from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
-import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { getAuth } from "firebase/auth";
 
 const auth = getAuth();
@@ -50,11 +51,28 @@ export default function PostDetail({ route, navigation }) {
     };
 
     const deletePost = async () => {
-        const ok = window.confirm("Are you sure you want to delete this post?");
-        if (ok) {
-            await deleteDoc(doc(firestore, "posts", id)).then(() => {
-                navigation.navigate("Home");
-            });
+        if (Platform.OS === "web") {
+            const ok = confirm("Are you sure you want to delete this post?");
+            if (ok) {
+                await deleteDoc(doc(firestore, "posts", id)).then(() => {
+                    navigation.navigate("Home");
+                });
+            }
+        } else {
+            Alert.alert("Deleting the Post", "Are you sure?", [
+                { text: "Cancel" },
+                {
+                    text: "I'm sure",
+                    style: "destructive",
+                    onPress: async () => {
+                        await deleteDoc(doc(firestore, "posts", id)).then(
+                            () => {
+                                navigation.navigate("Home");
+                            }
+                        );
+                    },
+                },
+            ]);
         }
     };
     return (
