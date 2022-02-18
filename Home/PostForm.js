@@ -17,8 +17,11 @@ import {
     doc,
     updateDoc,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
+const auth = getAuth();
 export default function PostForm({ route, navigation }) {
+    const user = auth.currentUser;
     const firestore = getFirestore();
     const [content, setContent] = useState({
         title: "",
@@ -26,6 +29,7 @@ export default function PostForm({ route, navigation }) {
         address: "",
         type: "",
         price: "",
+        writerID: "",
     });
 
     useEffect(() => {
@@ -35,6 +39,7 @@ export default function PostForm({ route, navigation }) {
             setContent({
                 ...content,
                 type: route.params.text,
+                writerID: user.uid,
             });
             console.log(content);
         }
@@ -55,6 +60,7 @@ export default function PostForm({ route, navigation }) {
                 address: post.address,
                 type: post.type,
                 price: post.price,
+                writerID: post.writerID,
             });
             console.log(content);
         } catch (error) {

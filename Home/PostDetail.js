@@ -9,8 +9,14 @@ import {
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { useAuthentication } from "../utils/hooks/useAuthentication";
+import { getAuth } from "firebase/auth";
 
+const auth = getAuth();
 export default function PostDetail({ route, navigation }) {
+    // const { user } = useAuthentication();
+    const user = auth.currentUser;
+    console.log(user);
     const firestore = getFirestore();
     const [content, setContent] = useState({});
     const id = route.params.key;
@@ -28,10 +34,12 @@ export default function PostDetail({ route, navigation }) {
 
     const loadPost = async () => {
         try {
+            console.log(user.uid);
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
             setContent(post);
+            console.log(post);
         } catch (error) {
             console.log(error.message);
         }
@@ -70,14 +78,16 @@ export default function PostDetail({ route, navigation }) {
                         style={styles.postHeart}
                     />
                 </View>
-                {/* <View> */}
-                <TouchableOpacity onPress={() => updatePost(id)}>
-                    <Text>수정</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => deletePost(id)}>
-                    <Text>삭제</Text>
-                </TouchableOpacity>
-                {/* </View> */}
+                {user.uid == content.writerID ? (
+                    <>
+                        <TouchableOpacity onPress={() => updatePost(id)}>
+                            <Text>수정</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => deletePost(id)}>
+                            <Text>삭제</Text>
+                        </TouchableOpacity>
+                    </>
+                ) : null}
             </View>
         </View>
     );

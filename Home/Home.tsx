@@ -7,7 +7,6 @@ import {
     Image,
     DeviceEventEmitter,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
