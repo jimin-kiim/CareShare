@@ -15,7 +15,6 @@ import { getAuth } from "firebase/auth";
 
 const auth = getAuth();
 export default function PostDetail({ route, navigation }) {
-    // const { user } = useAuthentication();
     const user = auth.currentUser;
     console.log(user);
     const firestore = getFirestore();
@@ -77,10 +76,7 @@ export default function PostDetail({ route, navigation }) {
     };
     return (
         <View style={styles.post}>
-            <Image
-                source={require("../assets/test.jpeg")}
-                style={styles.postImg}
-            />
+            <Image source={{ uri: content.image }} style={styles.postImg} />
             <View style={styles.postContent}>
                 <Text style={styles.postTitle}>{content.title}</Text>
                 <View style={styles.postInfo}>

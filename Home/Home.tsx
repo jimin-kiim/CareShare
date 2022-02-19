@@ -94,6 +94,7 @@ const Home = ({ navigation }) => {
                               address={post.address}
                               type={post.type}
                               price={post.price}
+                              image={post.image}
                               navigation={navigation}
                           />
                       ))

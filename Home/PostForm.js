@@ -8,6 +8,9 @@ import {
     TextInput,
     Button,
     DeviceEventEmitter,
+    Alert,
+    Image,
+    Platform,
 } from "react-native";
 import {
     getFirestore,
@@ -18,11 +21,16 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-
+// import * as ImagePicker from "react-native-image-picker";
+import * as Progress from "react-native-progress";
+import * as ImagePicker from "expo-image-picker";
 const auth = getAuth();
+// console.log(ImagePicker.launchCamera, ImagePicker.launchImageLibrary, "!");
 export default function PostForm({ route, navigation }) {
     const user = auth.currentUser;
     const firestore = getFirestore();
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
     const [content, setContent] = useState({
         title: "",
         content: "",
@@ -30,6 +38,7 @@ export default function PostForm({ route, navigation }) {
         type: "",
         price: "",
         writerID: "",
+        image: "",
     });
 
     useEffect(() => {
@@ -89,6 +98,63 @@ export default function PostForm({ route, navigation }) {
         } catch (error) {
             console.log(error.message);
         }
+    };
+    // const selectImage = () => {
+    // const options = {
+    //     maxWidth: 2000,
+    //     maxHeight: 2000,
+    //     storageOptions: {
+    //         skipBackup: true,
+    //         path: "images",
+    //     },
+    // };
+    // console.log("?");
+    // ImagePicker.launchImageLibrary({}, () => {
+    //     console.log("!");
+    // if (response.didCancel) {
+    //     console.log("User cancelled image picker");
+    // } else if (response.error) {
+    //     console.log("ImagePicker Error: ", response.error);
+    // } else {
+    // const source = { uri: response.uri };
+    // console.log(source);
+    // setImage(source);
+    // }
+    // });
+    // };
+    const selectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result.uri);
+        setContent({
+            ...content,
+            image: result.uri,
+        });
+
+        // if (!result.cancelled) {
+
+        // }
+    };
+    const uploadImage = async () => {
+        console.log(content);
+        const uri = content.image;
+        console.log(uri);
+        const filename = uri.substring(uri.lastIndexOf("/") + 1);
+        const uploadUri =
+            Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+        setContent({
+            ...content,
+            image: uploadUri,
+        });
+        // Alert.alert(
+        //     "Photo uploaded!",
+        //     "Your photo has been uploaded to Firebase Cloud Storage!"
+        // );
     };
     return (
         <View style={styles.formContainer}>
@@ -158,6 +224,25 @@ export default function PostForm({ route, navigation }) {
                     value={content.price}
                 ></TextInput>
             </View>
+
+            <TouchableOpacity onPress={selectImage}>
+                <Text>Pick an image</Text>
+            </TouchableOpacity>
+            <View>
+                {content.image !== null ? (
+                    <Image source={{ uri: content.image }} />
+                ) : null}
+                {uploading ? (
+                    <View>
+                        <Progress.Bar progress={transferred} width={300} />
+                    </View>
+                ) : (
+                    <TouchableOpacity onPress={uploadImage}>
+                        <Text>Upload image</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+
             <Button
                 title="저장"
                 style={styles.button}

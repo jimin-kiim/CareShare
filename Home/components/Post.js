@@ -3,7 +3,15 @@ import { theme } from "../../colors";
 
 import React from "react";
 
-export default function Post({ id, title, address, type, price, navigation }) {
+export default function Post({
+    id,
+    title,
+    address,
+    type,
+    price,
+    image,
+    navigation,
+}) {
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
@@ -11,10 +19,7 @@ export default function Post({ id, title, address, type, price, navigation }) {
                     navigation.navigate("PostDetail", { key: id, navigation })
                 }
             >
-                <Image
-                    source={require("../../assets/test.jpeg")}
-                    style={styles.postImg}
-                />
+                <Image source={{ uri: image }} style={styles.postImg} />
             </TouchableOpacity>
             <View style={styles.postContent}>
                 <TouchableOpacity
