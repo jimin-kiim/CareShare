@@ -96,6 +96,7 @@ const Home = ({ navigation }) => {
                               price={post.price}
                               image={post.image}
                               navigation={navigation}
+                              date={post.createdAt}
                           />
                       ))
                     : null}

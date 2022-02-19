@@ -24,6 +24,8 @@ import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
+    const date = new Date().getTime();
+    console.log(date);
     const user = auth.currentUser;
     const firestore = getFirestore();
     const [content, setContent] = useState({
@@ -34,6 +36,7 @@ export default function PostForm({ route, navigation }) {
         price: "",
         writerID: "",
         image: "",
+        createdAt: "",
     });
 
     useEffect(() => {
@@ -44,6 +47,7 @@ export default function PostForm({ route, navigation }) {
                 ...content,
                 type: route.params.text,
                 writerID: user.uid,
+                createdAt: date,
             });
             console.log(content);
         }
@@ -66,6 +70,7 @@ export default function PostForm({ route, navigation }) {
                 price: post.price,
                 writerID: post.writerID,
                 image: post.image,
+                createdAt: post.createdAt,
             });
             console.log(content);
         } catch (error) {
@@ -184,7 +189,7 @@ export default function PostForm({ route, navigation }) {
             </View>
 
             <TouchableOpacity onPress={selectImage}>
-                <Text>Pick an image</Text>
+                <Text>사진 업로드하기</Text>
             </TouchableOpacity>
             <View>
                 {content.image ? (

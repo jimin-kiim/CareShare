@@ -15,6 +15,7 @@ import { getAuth } from "firebase/auth";
 
 const auth = getAuth();
 export default function PostDetail({ route, navigation }) {
+    const date = new Date().getTime();
     const user = auth.currentUser;
     console.log(user);
     const firestore = getFirestore();
@@ -81,7 +82,14 @@ export default function PostDetail({ route, navigation }) {
                 <Text style={styles.postTitle}>{content.title}</Text>
                 <View style={styles.postInfo}>
                     <Text style={styles.postInfoText}>{content.address}</Text>
-                    <Text style={styles.postInfoText}> · 2일전</Text>
+                    <Text style={styles.postInfoText}>
+                        {" "}
+                        ·{" "}
+                        {Math.floor(
+                            (date - content.createdAt) / (1000 * 60 * 60 * 24)
+                        )}
+                        일 전
+                    </Text>
                 </View>
                 <Text style={styles.postType}>{content.type}</Text>
                 <Text style={styles.postType}>{content.content}</Text>

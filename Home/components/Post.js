@@ -11,7 +11,9 @@ export default function Post({
     price,
     image,
     navigation,
+    date,
 }) {
+    const dateToday = new Date().getTime();
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
@@ -31,7 +33,12 @@ export default function Post({
                 </TouchableOpacity>
                 <View style={styles.postInfo}>
                     <Text style={styles.postInfoText}>{address}</Text>
-                    <Text style={styles.postInfoText}> · 2일전</Text>
+                    <Text style={styles.postInfoText}>
+                        {" "}
+                        ·{" "}
+                        {Math.floor((dateToday - date) / (1000 * 60 * 60 * 24))}
+                        일 전
+                    </Text>
                 </View>
                 <Text style={styles.postType}>{type}</Text>
                 <View style={styles.postLastInfo}>
