@@ -13,7 +13,8 @@ export default function UserStack() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
-                    headerMode: "none",
+                    headerShown: false,
+                    cardStyle: { backgroundColor: "#ffffff" },
                 }}
             >
                 <Stack.Screen name="Home" component={Home} />

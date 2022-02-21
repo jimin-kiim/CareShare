@@ -25,7 +25,6 @@ import * as ImagePicker from "expo-image-picker";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
-    console.log(date);
     const user = auth.currentUser;
     const firestore = getFirestore();
     const [content, setContent] = useState({
@@ -49,7 +48,7 @@ export default function PostForm({ route, navigation }) {
                 writerID: user.uid,
                 createdAt: date,
             });
-            console.log(content);
+            // console.log(content);
         }
         return () => {
             console.log("unmount form");
@@ -61,7 +60,7 @@ export default function PostForm({ route, navigation }) {
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
-            console.log(post);
+            // console.log(post);
             setContent({
                 title: post.title,
                 content: post.content,
@@ -72,7 +71,7 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt,
             });
-            console.log(content);
+            // console.log(content);
         } catch (error) {
             console.log(error.message);
         }
@@ -108,15 +107,13 @@ export default function PostForm({ route, navigation }) {
             aspect: [4, 3],
             quality: 1,
         });
-        const uploadUri =
-            Platform.OS === "ios"
-                ? result.uri.replace("file://", "")
-                : result.uri;
+        console.log("result:", result);
+        const uploadUri = result.uri;
         setContent({
             ...content,
             image: uploadUri,
         });
-        console.log(content);
+        // console.log(content);
     };
 
     return (

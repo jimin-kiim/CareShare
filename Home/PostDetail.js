@@ -7,17 +7,19 @@ import {
     DeviceEventEmitter,
     Alert,
     Platform,
+    Dimensions,
+    ScrollView,
 } from "react-native";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const auth = getAuth();
 export default function PostDetail({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
-    console.log(user);
     const firestore = getFirestore();
     const [content, setContent] = useState({});
     const id = route.params.key;
@@ -76,71 +78,106 @@ export default function PostDetail({ route, navigation }) {
         }
     };
     return (
-        <View style={styles.post}>
-            <Image source={{ uri: content.image }} style={styles.postImg} />
-            <View style={styles.postContent}>
-                <Text style={styles.postTitle}>{content.title}</Text>
-                <View style={styles.postInfo}>
-                    <Text style={styles.postInfoText}>{content.address}</Text>
-                    <Text style={styles.postInfoText}>
-                        {" "}
-                        ·{" "}
-                        {Math.floor(
-                            (date - content.createdAt) / (1000 * 60 * 60 * 24)
-                        )}
-                        일 전
-                    </Text>
-                </View>
-                <Text style={styles.postType}>{content.type}</Text>
-                <Text style={styles.postType}>{content.content}</Text>
-                <View style={styles.postLastInfo}>
-                    <Text style={styles.postPrice}>{content.price} 원</Text>
-                    <Image
-                        source={require("../assets/ios-heart-empty.svg")}
-                        style={styles.postHeart}
-                    />
-                </View>
-                {user.uid == content.writerID ? (
-                    <>
-                        <TouchableOpacity onPress={() => updatePost(id)}>
-                            <Text>수정</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => deletePost(id)}>
-                            <Text>삭제</Text>
-                        </TouchableOpacity>
-                    </>
-                ) : null}
+        <>
+            <View style={styles.header}>
+                <Image></Image>
+                <Image></Image>
+                <Image></Image>
             </View>
-        </View>
+            <ScrollView>
+                <View style={styles.post}>
+                    <View style={styles.writerInfo}>
+                        <Image style={styles.profileImg}></Image>
+                        <Text style={styles.writerName}></Text>
+                        <Text sytle={styles.careText}></Text>
+                        <Text style={styles.careNum}></Text>
+                    </View>
+                    <Image
+                        source={{ uri: content.image }}
+                        style={styles.postImg}
+                    />
+                    <View style={styles.postContents}>
+                        <View style={styles.temporary}>
+                            <Text style={styles.postType}>{content.type}</Text>
+                            {user.uid == content.writerID ? (
+                                <View style={styles.forWriter}>
+                                    <TouchableOpacity
+                                        onPress={() => updatePost(id)}
+                                    >
+                                        <Text style={styles.forWriterText}>
+                                            수정
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => deletePost(id)}
+                                    >
+                                        <Text style={styles.forWriterText}>
+                                            삭제
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : null}
+                        </View>
+                        <Text style={styles.postTitle}>{content.title}</Text>
+                        <View style={styles.postInfo}>
+                            <Text style={styles.postInfoText}>
+                                {content.address}
+                            </Text>
+                            <Text style={styles.postInfoText}>
+                                {" "}
+                                ·{" "}
+                                {Math.floor(
+                                    (date - content.createdAt) /
+                                        (1000 * 60 * 60 * 24)
+                                )}
+                                일 전
+                            </Text>
+                        </View>
+                        <Text style={styles.postContent}>
+                            {content.content}
+                        </Text>
+                    </View>
+                </View>
+            </ScrollView>
+            <View style={styles.contact}>
+                <View style={styles.contactLeft}>
+                    <TouchableOpacity>
+                        <Image
+                            source={require("../assets/ios-heart-empty.svg")}
+                            style={styles.postHeart}
+                        />
+                    </TouchableOpacity>
+                    <View>
+                        <Text style={styles.postPrice}>
+                            보증금: {content.price} 원
+                        </Text>
+                        <Text style={styles.postPrice}>대여료:</Text>
+                    </View>
+                </View>
+                <TouchableOpacity>
+                    <Text style={styles.chatBtn}>채팅 보내기</Text>
+                </TouchableOpacity>
+            </View>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     post: {
-        flexDirection: "row",
-        paddingHorizontal: 25,
         paddingTop: 25,
         marginTop: 30,
     },
-    postContent: {
-        paddingLeft: 20,
-    },
     postImg: {
-        width: 120,
-        height: 120,
+        width: SCREEN_WIDTH,
+        height: SCREEN_WIDTH,
     },
-    postTitle: {
-        fontSize: 20,
-        color: theme.textDark,
+    postContents: {
+        marginHorizontal: 20,
     },
-    postInfo: {
+    temporary: {
         flexDirection: "row",
-        paddingTop: 5,
-        paddingBottom: 17,
-    },
-    postInfoText: {
-        fontSize: 15,
-        color: theme.textLight,
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     postType: {
         fontSize: 15,
@@ -150,20 +187,62 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         paddingHorizontal: 11,
         alignSelf: "flex-start",
+        marginVertical: 20,
     },
-    postLastInfo: {
+    forWriter: {
+        flexDirection: "row",
+    },
+    forWriterText: {
+        color: theme.textLight,
+        marginLeft: 10,
+    },
+    postTitle: {
+        fontSize: 20,
+        color: theme.textDark,
+        fontWeight: "700",
+    },
+    postInfo: {
+        flexDirection: "row",
+        paddingTop: 7,
+        paddingBottom: 17,
+    },
+    postInfoText: {
+        fontSize: 15,
+        color: theme.textLight,
+    },
+    postContent: {
+        fontSize: 18,
+        lineHeight: 26,
+        color: theme.textDark,
+    },
+    contact: {
+        flexDirection: "row",
+        marginHorizontal: 18,
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingBottom: 10,
+    },
+    contactLeft: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+    },
+    postHeart: {
+        width: 20,
+        height: 18,
+        marginRight: 20,
+        marginLeft: 5,
     },
     postPrice: {
         fontSize: 18,
         color: theme.textDark,
         fontWeight: "700",
-        paddingTop: 6,
     },
-    postHeart: {
-        width: 20,
-        height: 18,
+    chatBtn: {
+        backgroundColor: theme.yellow,
+        paddingHorizontal: 13,
+        paddingVertical: 6,
+        borderRadius: 17,
+        fontWeight: "700",
+        fontSize: 18,
     },
 });
