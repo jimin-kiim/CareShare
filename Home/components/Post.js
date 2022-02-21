@@ -81,11 +81,12 @@ const styles = StyleSheet.create({
     postType: {
         fontSize: 15,
         color: theme.textDark,
-        borderRadius: 15,
+        borderRadius: 10,
         backgroundColor: "#EEEEEE",
         paddingVertical: 3,
         paddingHorizontal: 11,
         alignSelf: "flex-start",
+        overflow: "hidden",
     },
     postLastInfo: {
         flexDirection: "row",

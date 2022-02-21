@@ -170,7 +170,6 @@ export default function PostDetail({ route, navigation }) {
                         <Text style={styles.postPrice}>
                             보증금: {content.price} 원
                         </Text>
-                        <Text style={styles.postPrice}>대여료:</Text>
                     </View>
                 </View>
                 <TouchableOpacity>
@@ -250,6 +249,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginLeft: 10,
         marginBottom: 2,
+        overflow: "hidden",
     },
     postImg: {
         width: SCREEN_WIDTH,
@@ -266,12 +266,13 @@ const styles = StyleSheet.create({
     postType: {
         fontSize: 15,
         color: theme.textDark,
-        borderRadius: 15,
+        borderRadius: 10,
         backgroundColor: "#EEEEEE",
         paddingVertical: 3,
         paddingHorizontal: 11,
         alignSelf: "flex-start",
         marginVertical: 20,
+        overflow: "hidden",
     },
     forWriter: {
         flexDirection: "row",
@@ -328,5 +329,6 @@ const styles = StyleSheet.create({
         borderRadius: 17,
         fontWeight: "700",
         fontSize: 18,
+        overflow: "hidden",
     },
 });
