@@ -80,17 +80,38 @@ export default function PostDetail({ route, navigation }) {
     return (
         <>
             <View style={styles.header}>
-                <Image></Image>
-                <Image></Image>
-                <Image></Image>
+                <TouchableOpacity style={styles.headerLeft}>
+                    <Image
+                        source={require("../assets/ios-arrow-down.svg")}
+                        style={styles.goBackIcon}
+                    />
+                    <Image
+                        source={require("../assets/ios-home.svg")}
+                        style={styles.homeIcon}
+                    ></Image>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <Image
+                        source={require("../assets/ios-share-alt.svg")}
+                        style={styles.shareIcon}
+                    ></Image>
+                </TouchableOpacity>
             </View>
             <ScrollView>
-                <View style={styles.post}>
+                <View>
                     <View style={styles.writerInfo}>
-                        <Image style={styles.profileImg}></Image>
-                        <Text style={styles.writerName}></Text>
-                        <Text sytle={styles.careText}></Text>
-                        <Text style={styles.careNum}></Text>
+                        <View style={styles.writerInfoLeft}>
+                            <Image
+                                style={styles.profileImg}
+                                source={require("../assets/Ellipse 2.svg")}
+                            ></Image>
+                            <Text style={styles.writerName}>정카잇</Text>
+                        </View>
+                        <View style={styles.writerInfoRight}>
+                            <Text style={styles.careText}>케어지수</Text>
+                            <Text style={styles.careNum}>4</Text>
+                        </View>
                     </View>
                     <Image
                         source={{ uri: content.image }}
@@ -163,9 +184,74 @@ export default function PostDetail({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    post: {
-        paddingTop: 25,
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingVertical: 20,
         marginTop: 30,
+        marginHorizontal: 23,
+        borderBottomColor: "#F5F5F5",
+        borderBottomWidth: 1,
+    },
+    headerLeft: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    goBackIcon: {
+        width: 20,
+        height: 13,
+        transform: [{ rotate: "90deg" }],
+        marginRight: 14,
+        tintColor: theme.iconGray,
+    },
+    homeIcon: {
+        width: 22,
+        height: 24,
+    },
+    shareIcon: {
+        width: 24,
+        height: 22,
+    },
+    writerInfo: {
+        marginHorizontal: 15,
+        marginVertical: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    writerInfoLeft: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    profileImg: {
+        width: 37,
+        height: 37,
+        marginRight: 13,
+    },
+    writerName: {
+        fontSize: 18,
+        color: theme.textDark,
+    },
+    writerInfoRight: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    careText: {
+        fontSize: 15,
+        color: theme.textLight,
+        fontWeight: "500",
+    },
+    careNum: {
+        fontSize: 15,
+        color: theme.textDark,
+        fontWeight: "700",
+        backgroundColor: "#E4F963",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 15,
+        marginLeft: 10,
+        marginBottom: 2,
     },
     postImg: {
         width: SCREEN_WIDTH,
