@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../../colors";
-
+import { elapsedTime } from "../functions";
 import React from "react";
 
 export default function Post({
@@ -13,7 +13,6 @@ export default function Post({
     navigation,
     date,
 }) {
-    const dateToday = new Date().getTime();
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
@@ -35,9 +34,7 @@ export default function Post({
                     <Text style={styles.postInfoText}>{address}</Text>
                     <Text style={styles.postInfoText}>
                         {" "}
-                        ·{" "}
-                        {Math.floor((dateToday - date) / (1000 * 60 * 60 * 24))}
-                        일 전
+                        · {elapsedTime(date)}일 전
                     </Text>
                 </View>
                 <Text style={styles.postType}>{type}</Text>

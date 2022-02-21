@@ -10,6 +10,7 @@ import {
     Dimensions,
     ScrollView,
 } from "react-native";
+import { elapsedTime } from "./functions";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
@@ -18,7 +19,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const auth = getAuth();
 export default function PostDetail({ route, navigation }) {
-    const date = new Date().getTime();
     const user = auth.currentUser;
     const firestore = getFirestore();
     const [content, setContent] = useState({});
@@ -80,7 +80,10 @@ export default function PostDetail({ route, navigation }) {
     return (
         <>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.headerLeft}>
+                <TouchableOpacity
+                    style={styles.headerLeft}
+                    onPress={() => navigation.navigate("Home", { navigation })}
+                >
                     <Image
                         source={require("../assets/ios-arrow-down.svg")}
                         style={styles.goBackIcon}
@@ -146,12 +149,7 @@ export default function PostDetail({ route, navigation }) {
                             </Text>
                             <Text style={styles.postInfoText}>
                                 {" "}
-                                ·{" "}
-                                {Math.floor(
-                                    (date - content.createdAt) /
-                                        (1000 * 60 * 60 * 24)
-                                )}
-                                일 전
+                                · {elapsedTime(content.createdAt)}일 전
                             </Text>
                         </View>
                         <Text style={styles.postContent}>
@@ -306,7 +304,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 18,
         justifyContent: "space-between",
         alignItems: "center",
-        paddingBottom: 10,
+        paddingVertical: 10,
     },
     contactLeft: {
         flexDirection: "row",
