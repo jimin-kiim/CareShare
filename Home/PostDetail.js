@@ -15,6 +15,11 @@ import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import Arrow from "../assets/ios-arrow-down.svg";
+import Home from "../assets/ios-home.svg";
+import Share from "../assets/ios-share-alt.svg";
+import TempProfile from "../assets/Ellipse 2.svg";
+import Heart from "../assets/ios-heart-empty.svg";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const auth = getAuth();
@@ -84,31 +89,21 @@ export default function PostDetail({ route, navigation }) {
                     style={styles.headerLeft}
                     onPress={() => navigation.navigate("Home", { navigation })}
                 >
-                    <Image
-                        source={require("../assets/ios-arrow-down.svg")}
-                        style={styles.goBackIcon}
-                    />
-                    <Image
-                        source={require("../assets/ios-home.svg")}
-                        style={styles.homeIcon}
-                    ></Image>
+                    <Arrow style={styles.goBackIcon} />
+                    <Home style={styles.homeIcon}></Home>
                 </TouchableOpacity>
 
                 <TouchableOpacity>
-                    <Image
-                        source={require("../assets/ios-share-alt.svg")}
-                        style={styles.shareIcon}
-                    ></Image>
+                    <Share style={styles.shareIcon}></Share>
                 </TouchableOpacity>
             </View>
             <ScrollView>
                 <View>
                     <View style={styles.writerInfo}>
                         <View style={styles.writerInfoLeft}>
-                            <Image
+                            <TempProfile
                                 style={styles.profileImg}
-                                source={require("../assets/Ellipse 2.svg")}
-                            ></Image>
+                            ></TempProfile>
                             <Text style={styles.writerName}>정카잇</Text>
                         </View>
                         <View style={styles.writerInfoRight}>
@@ -161,10 +156,7 @@ export default function PostDetail({ route, navigation }) {
             <View style={styles.contact}>
                 <View style={styles.contactLeft}>
                     <TouchableOpacity>
-                        <Image
-                            source={require("../assets/ios-heart-empty.svg")}
-                            style={styles.postHeart}
-                        />
+                        <Heart style={styles.postHeart} />
                     </TouchableOpacity>
                     <View>
                         <Text style={styles.postPrice}>보증금: 15,000 원</Text>

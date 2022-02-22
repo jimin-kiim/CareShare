@@ -12,7 +12,7 @@ import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post";
-
+import Arrow from "../assets/ios-arrow-down.svg";
 const NewPost = ({ text, navigation }) => {
     return (
         <TouchableOpacity
@@ -60,10 +60,7 @@ const Home = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerFilter}>
-                    <Image
-                        source={require("../assets/ios-arrow-down.svg")}
-                        style={styles.headerFilterIcon}
-                    />
+                    <Arrow style={styles.headerFilterIcon} />
                     <Text style={styles.headerFilterText}>전체</Text>
                 </TouchableOpacity>
                 <View style={styles.headerIcons}>

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../../colors";
 import { elapsedTime } from "../functions";
 import React from "react";
-
+import Heart from "../../assets/ios-heart-empty.svg";
 export default function Post({
     id,
     title,
@@ -41,10 +41,7 @@ export default function Post({
                 <View style={styles.postLastInfo}>
                     <Text style={styles.postPrice}>{price}원</Text>
                     <TouchableOpacity>
-                        <Image
-                            source={require("../../assets/ios-heart-empty.svg")}
-                            style={styles.postHeart}
-                        />
+                        <Heart style={styles.postHeart} />
                     </TouchableOpacity>
                 </View>
             </View>
