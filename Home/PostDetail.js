@@ -167,8 +167,9 @@ export default function PostDetail({ route, navigation }) {
                         />
                     </TouchableOpacity>
                     <View>
+                        <Text style={styles.postPrice}>보증금: 15,000 원</Text>
                         <Text style={styles.postPrice}>
-                            보증금: {content.price} 원
+                            대여료: {content.price} 원
                         </Text>
                     </View>
                 </View>

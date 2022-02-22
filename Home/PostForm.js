@@ -108,12 +108,15 @@ export default function PostForm({ route, navigation }) {
             quality: 1,
         });
         console.log("result:", result);
-        const uploadUri = result.uri;
+        const uploadUri =
+            Platform.OS === "ios"
+                ? result.uri.replace("file://", "")
+                : result.uri;
         setContent({
             ...content,
             image: uploadUri,
         });
-        // console.log(content);
+        console.log(content);
     };
 
     return (
