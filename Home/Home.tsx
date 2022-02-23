@@ -5,40 +5,52 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
+    DeviceEventEmitter,
 } from "react-native";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import Firebase from "../config/firebase";
 import Post from "./components/Post";
-
-const NewPostText = ({ text, navigation }) => {
+import Arrow from "../assets/ios-arrow-down.svg";
+const NewPost = ({ text, navigation }) => {
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("NewPost")}>
+        <TouchableOpacity
+            onPress={() => navigation.navigate("PostForm", { text })}
+        >
             <Text style={styles.newPostText}>{text}</Text>
         </TouchableOpacity>
     );
 };
+
 const Home = ({ navigation }) => {
-    const postsRef = Firebase.firestore().collection("users").doc("posts");
+    const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
     useEffect(() => {
         loadPosts();
+        DeviceEventEmitter.addListener("toHome", () => {
+            loadPosts();
+        });
+        return () => {
+            DeviceEventEmitter.emit("toDetail");
+        };
     }, []);
+
     const buttonPressed = () => {
         setClicked((current) => !current);
-        console.log("clicked", clicked);
     };
+
     const loadPosts = async () => {
         try {
-            const data = await postsRef.get();
+            const postDoc = await getDocs(collection(firestore, "posts"));
             const postsFetched = [];
-            data.docs.forEach((doc) => {
+            postDoc.forEach((doc) => {
                 const data = doc.data();
-                postsFetched.push(data);
+                postsFetched.push({ ...data, key: doc.id });
             });
             setPosts(postsFetched);
+            console.log(postsFetched);
         } catch (error) {
             console.log(error.message);
         }
@@ -47,16 +59,10 @@ const Home = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.headerFilter}>
-                    <Image
-                        source={require("../assets/ios-arrow-down.svg")}
-                        style={styles.headerFilterIcon}
-                    />
-                    <TouchableOpacity>
-                        <Text style={styles.headerFilterText}>전체</Text>
-                    </TouchableOpacity>
-                </View>
-
+                <TouchableOpacity style={styles.headerFilter}>
+                    <Arrow style={styles.headerFilterIcon} />
+                    <Text style={styles.headerFilterText}>전체</Text>
+                </TouchableOpacity>
                 <View style={styles.headerIcons}>
                     <TouchableOpacity>
                         <Ionicons
@@ -76,76 +82,30 @@ const Home = ({ navigation }) => {
                 </View>
             </View>
             <ScrollView>
-                <Post
-                    id="1"
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="나눔해요"
-                    price="10,000"
-                    navigation={navigation}
-                ></Post>
-                <Post
-                    id="1"
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="나눔해요"
-                    price="10,000"
-                    navigation={navigation}
-                ></Post>
-                <Post
-                    id="1"
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="빌려요"
-                    price="30,000"
-                    navigation={navigation}
-                ></Post>
-                <Post
-                    id="1"
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="판매해요"
-                    price="20,000"
-                    navigation={navigation}
-                ></Post>
-                <Post
-                    id="1"
-                    title="환자 걷기 보조 재활기구"
-                    address="노원구 공릉2동"
-                    type="판매해요"
-                    price="20,000"
-                    navigation={navigation}
-                ></Post>
-
                 {posts
-                    ? posts.map((post) => {
+                    ? posts.map((post) => (
                           <Post
-                              id={post.id}
+                              key={post.key}
+                              id={post.key}
                               title={post.title}
                               address={post.address}
                               type={post.type}
                               price={post.price}
+                              image={post.image}
                               navigation={navigation}
-                          ></Post>;
-                      })
+                              date={post.createdAt}
+                          />
+                      ))
                     : null}
             </ScrollView>
 
-            <View
-                style={{
-                    alignItems: "flex-end",
-                    justifyContent: "flex-end",
-                }}
-            >
+            <View style={styles.newPostContainer}>
                 {clicked ? (
                     <View style={styles.newPostTexts}>
-                        <NewPostText
-                            text="빌려드려요"
-                            navigation={navigation}
-                        />
-                        <NewPostText text="빌려요" navigation={navigation} />
-                        <NewPostText text="나눔해요" navigation={navigation} />
-                        <NewPostText text="판매해요" navigation={navigation} />
+                        <NewPost text="빌려드려요" navigation={navigation} />
+                        <NewPost text="빌려요" navigation={navigation} />
+                        <NewPost text="나눔해요" navigation={navigation} />
+                        <NewPost text="판매해요" navigation={navigation} />
                     </View>
                 ) : null}
                 <TouchableOpacity
@@ -176,6 +136,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         borderBottomColor: "#F5F5F5",
         borderBottomWidth: 1,
+        marginTop: 30,
         // zIndex: 10,
         // position: "absolute",
     },
@@ -197,7 +158,10 @@ const styles = StyleSheet.create({
         height: 8,
         marginBottom: 3,
     },
-
+    newPostContainer: {
+        alignItems: "flex-end",
+        justifyContent: "flex-end",
+    },
     newPostTexts: {
         position: "absolute",
         zIndex: 1,
@@ -206,7 +170,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 13,
         borderRadius: 10,
-        marginBottom: 120,
+        // marginBottom: 600,
         marginRight: 15,
     },
     newPostText: {
@@ -219,7 +183,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 1,
         marginRight: 12,
-        marginBottom: 60,
+        // paddingBottom: 200,
     },
 });
 

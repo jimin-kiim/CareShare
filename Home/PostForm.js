@@ -1,128 +1,233 @@
 import { useEffect, useState } from "react";
-import Firebase from "../config/firebase";
 import { theme } from "../colors";
-
 import {
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
-    ScrollView,
-    Image,
-    Dimensions,
-    ImageBackground,
     TextInput,
     Button,
+    DeviceEventEmitter,
+    Alert,
+    Image,
+    Platform,
 } from "react-native";
-export default function PostForm({ navigation }) {
-    const [text, setText] = useState("");
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDoc,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import * as ImagePicker from "expo-image-picker";
+const auth = getAuth();
+export default function PostForm({ route, navigation }) {
+    const date = new Date().getTime();
+    const user = auth.currentUser;
+    const firestore = getFirestore();
     const [content, setContent] = useState({
-        id: Date.now(),
         title: "",
         content: "",
         address: "",
         type: "",
         price: "",
+        writerID: "",
+        image: "",
+        createdAt: "",
     });
 
-    const addDoc = Firebase.firestore().collection("users").doc("posts");
-
-    const savePost = async () => {
-        try {
-            await addDoc.add({
+    useEffect(() => {
+        if (route.params.key) {
+            loadPost(route.params.key);
+        } else {
+            setContent({
                 ...content,
+                type: route.params.text,
+                writerID: user.uid,
+                createdAt: date,
             });
-            console.log("Create Complete!");
+            // console.log(content);
+        }
+        return () => {
+            console.log("unmount form");
+        };
+    }, []);
+
+    const loadPost = async (id) => {
+        try {
+            const docRef = doc(firestore, "posts", id);
+            const postRef = await getDoc(docRef);
+            const post = postRef.data();
+            // console.log(post);
+            setContent({
+                title: post.title,
+                content: post.content,
+                address: post.address,
+                type: post.type,
+                price: post.price,
+                writerID: post.writerID,
+                image: post.image,
+                createdAt: post.createdAt,
+            });
+            // console.log(content);
         } catch (error) {
             console.log(error.message);
         }
     };
-    const onChangeText = (payload) => setText(payload);
+
+    const savePost = async () => {
+        try {
+            if (route.params.key) {
+                const id = route.params.key;
+                updateDoc(doc(firestore, "posts", id), {
+                    ...content,
+                }).then(() => {
+                    navigation.navigate("PostDetail", { key: id });
+                    DeviceEventEmitter.emit("toDetail");
+                    console.log("edit complete");
+                });
+            } else {
+                addDoc(collection(firestore, "posts"), {
+                    ...content,
+                }).then((docRef) => {
+                    navigation.navigate("PostDetail", { key: docRef.id });
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+    const selectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        console.log("result:", result);
+        const uploadUri =
+            Platform.OS === "ios"
+                ? result.uri.replace("file://", "")
+                : result.uri;
+        setContent({
+            ...content,
+            image: uploadUri,
+        });
+        console.log(content);
+    };
+
     return (
-        <View>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, title: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() =>
-                    setContent({ ...content, content: text })
-                }
-                onChangeText={onChangeText}
-                value={text}
-                multiline={true}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() =>
-                    setContent({ ...content, address: text })
-                }
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, type: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <TextInput
-                onSubmitEditing={() => setContent({ ...content, price: text })}
-                onChangeText={onChangeText}
-                value={text}
-            ></TextInput>
-            <Button onPress={() => savePost}></Button>
+        <View style={styles.formContainer}>
+            <View style={styles.itemContainer}>
+                <Text>제목 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, title: content.title })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, title: payload })
+                    }
+                    value={content.title}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>내용 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, content: content.content })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, content: payload })
+                    }
+                    value={content.content}
+                    multiline={true}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>주소 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, address: content.address })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, address: payload })
+                    }
+                    value={content.address}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>타입 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, type: content.type })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, type: payload })
+                    }
+                    value={content.type}
+                ></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text>가격 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, price: content.price })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, price: payload })
+                    }
+                    value={content.price}
+                ></TextInput>
+            </View>
+
+            <TouchableOpacity onPress={selectImage}>
+                <Text>사진 업로드하기</Text>
+            </TouchableOpacity>
+            <View>
+                {content.image ? (
+                    <Image
+                        source={{ uri: content.image }}
+                        style={{
+                            width: 120,
+                            height: 120,
+                        }}
+                    />
+                ) : null}
+            </View>
+
+            <Button
+                title="저장"
+                style={styles.button}
+                onPress={() => savePost()}
+            ></Button>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    post: {
+    formContainer: {
+        marginTop: 30,
+    },
+    itemContainer: {
         flexDirection: "row",
-        paddingHorizontal: 25,
-        paddingTop: 25,
+        paddingHorizontal: 20,
+        paddingTop: 20,
     },
-    postContent: {
-        paddingLeft: 20,
-    },
-    postImg: {
-        width: 120,
-        height: 120,
-    },
-    postTitle: {
-        fontSize: 20,
-        color: theme.textDark,
-    },
-    postInfo: {
-        flexDirection: "row",
-        paddingTop: 5,
-        paddingBottom: 17,
-    },
-    postInfoText: {
-        fontSize: 15,
-        color: theme.textLight,
-    },
-    postType: {
-        fontSize: 15,
-        color: theme.textDark,
+    textInput: {
+        borderColor: theme.textDark,
         borderRadius: 15,
-        backgroundColor: "#EEEEEE",
-        paddingVertical: 3,
-        paddingHorizontal: 11,
-        alignSelf: "flex-start",
+        borderWidth: 1,
     },
-    postLastInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    postPrice: {
-        fontSize: 18,
-        color: theme.textDark,
-        fontWeight: "700",
-        paddingTop: 6,
-    },
-    postHeart: {
-        width: 20,
-        height: 18,
+    button: {
+        marginHorizontal: 30,
+        borderRadius: 15,
     },
 });
