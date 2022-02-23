@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { StackScreenProps } from '@react-navigation/stack';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 
 const auth = getAuth();
 
@@ -11,6 +11,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [value, setValue] = React.useState({
     email: '',
     password: '',
+    id:'',
     error: ''
   })
 
@@ -24,8 +25,12 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
     }
   
     try {
-      await createUserWithEmailAndPassword(auth, value.email, value.password);
-      navigation.navigate('Sign In');
+      await createUserWithEmailAndPassword(auth, value.email, value.password)
+      .then(userData => {
+        updateProfile(userData.user, {displayName: value.id})
+      })
+      .then(() => {sendEmailVerification(auth.currentUser)});
+      await navigation.navigate('Sign In');
     } catch (error) {
       setValue({
         ...value,
@@ -50,6 +55,13 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
           //   name='envelope'
           //   size={16} />} 
           autoCompleteType={undefined}        />
+
+        <Input
+            placeholder='ID'
+            containerStyle={styles.control}
+            value={value.id}
+            onChangeText={(text) => setValue({ ...value, id: text})}
+            autoCompleteType={undefined} />
 
         <Input
           placeholder='Password'
