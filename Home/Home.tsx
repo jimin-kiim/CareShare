@@ -7,12 +7,16 @@ import {
     Image,
     DeviceEventEmitter,
 } from "react-native";
+import { Button } from "react-native-elements";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post";
 import Arrow from "../assets/ios-arrow-down.svg";
+import { getAuth } from "firebase/auth";
+
+const auth = getAuth();
 const NewPost = ({ text, navigation }) => {
     return (
         <TouchableOpacity
@@ -27,7 +31,7 @@ const Home = ({ navigation }) => {
     const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
-    const { user } = useAuthentication();
+
     useEffect(() => {
         loadPosts();
         DeviceEventEmitter.addListener("toHome", () => {
@@ -64,6 +68,7 @@ const Home = ({ navigation }) => {
                     <Arrow style={styles.headerFilterIcon} />
                     <Text style={styles.headerFilterText}>전체</Text>
                 </TouchableOpacity>
+                <Button title="Sign Out" onPress={() => auth.signOut()} />
                 <View style={styles.headerIcons}>
                     <TouchableOpacity>
                         <Ionicons
