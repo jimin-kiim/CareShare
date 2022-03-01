@@ -11,6 +11,7 @@ import { Button } from "react-native-elements";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
+import NavigationBar from "../navigationBar";
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post";
 import Arrow from "../assets/ios-arrow-down.svg";
@@ -55,7 +56,7 @@ const Home = ({ navigation }) => {
                 postsFetched.push({ ...data, key: doc.id });
             });
             setPosts(postsFetched);
-            console.log(postsFetched);
+            // console.log(postsFetched);
         } catch (error) {
             console.log(error.message);
         }
@@ -104,7 +105,6 @@ const Home = ({ navigation }) => {
                       ))
                     : null}
             </ScrollView>
-
             <View style={styles.newPostContainer}>
                 {clicked ? (
                     <View style={styles.newPostTexts}>
@@ -127,6 +127,14 @@ const Home = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
+            <NavigationBar
+                home={false}
+                info={false}
+                shopping={false}
+                chatting={false}
+                myPage={false}
+                navigation={navigation}
+            />
         </View>
     );
 };
