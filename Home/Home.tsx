@@ -11,11 +11,7 @@ import { Button } from "react-native-elements";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
-import HomeIcon from "../assets/ios-home.svg";
-import Info from "../assets/ios-information-circle-outline.svg";
-import Cart from "../assets/ios-cart.svg";
-import Chat from "../assets/ios-chatbubbles.svg";
-import Profile from "../assets/md-person.svg";
+import NavigationBar from "../navigationBar";
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post";
 import Arrow from "../assets/ios-arrow-down.svg";
@@ -109,7 +105,6 @@ const Home = ({ navigation }) => {
                       ))
                     : null}
             </ScrollView>
-
             <View style={styles.newPostContainer}>
                 {clicked ? (
                     <View style={styles.newPostTexts}>
@@ -132,49 +127,7 @@ const Home = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
-            <View
-                style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    borderTopColor: "#F5F5F5",
-                    borderTopWidth: 1,
-                }}
-            >
-                <TouchableOpacity style={styles.navigationItem}>
-                    <HomeIcon
-                        style={{
-                            ...styles.navigationIcon,
-                            marginTop: 12,
-                            marginBottom: 12,
-                            width: 13,
-                            height: 8,
-                        }}
-                    />
-                    <Text style={{ color: theme.iconGray }}>홈</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navigationItem}>
-                    <Info style={styles.navigationIcon} />
-                    <Text style={{ color: theme.iconGray }}>정보</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navigationItem}>
-                    <Cart style={styles.navigationIcon} />
-                    <Text style={{ color: theme.iconGray }}>쇼핑</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navigationItem}>
-                    <Chat style={styles.navigationIcon} />
-                    <Text style={{ color: theme.iconGray }}>채팅</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.navigationItem}>
-                    <Profile
-                        style={{
-                            ...styles.navigationIcon,
-                            marginTop: 15,
-                            marginBottom: 8,
-                        }}
-                    />
-                    <Text style={{ color: theme.iconGray }}>마이페이지</Text>
-                </TouchableOpacity>
-            </View>
+            <NavigationBar />
         </View>
     );
 };
@@ -238,15 +191,6 @@ const styles = StyleSheet.create({
         zIndex: 1,
         marginRight: 12,
         // paddingBottom: 200,
-    },
-
-    navigationItem: {
-        alignItems: "center",
-        width: 57,
-    },
-    navigationIcon: {
-        marginTop: 10,
-        marginBottom: 7,
     },
 });
 
