@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         borderTopColor: "#F5F5F5",
         borderTopWidth: 1,
+        marginBottom: 20,
     },
     navigationItem: {
         alignItems: "center",
