@@ -141,7 +141,7 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
     },
     header: {
         justifyContent: "space-between",
@@ -177,15 +177,14 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
     },
     newPostTexts: {
-        position: "absolute",
         zIndex: 1,
         backgroundColor: "gray",
         paddingHorizontal: 17,
         paddingTop: 8,
         paddingBottom: 13,
         borderRadius: 10,
-        // marginBottom: 600,
         marginRight: 15,
+        marginBottom: 10,
     },
     newPostText: {
         fontWeight: "600",
@@ -194,10 +193,9 @@ const styles = StyleSheet.create({
         color: theme.textDark,
     },
     newPostButton: {
-        position: "absolute",
         zIndex: 1,
         marginRight: 12,
-        // paddingBottom: 200,
+        marginBottom: 10,
     },
 });
 
