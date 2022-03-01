@@ -6,7 +6,15 @@ import Cart from "./assets/ios-cart.svg";
 import Chat from "./assets/ios-chatbubbles.svg";
 import Profile from "./assets/md-person.svg";
 import React from "react";
-export default function NavigationBar({}) {
+export default function NavigationBar({
+    home,
+    info,
+    shopping,
+    chatting,
+    myPage,
+    navigation,
+}) {
+    console.log(home);
     return (
         <View style={styles.naviationBar}>
             <TouchableOpacity
@@ -14,33 +22,86 @@ export default function NavigationBar({}) {
                 onPress={() => navigation.navigate("Home", { navigation })}
             >
                 <HomeIcon
+                    width={20}
+                    height={23}
+                    fill={home ? theme.textDark : theme.iconGray}
                     style={{
                         marginTop: 14,
-                        marginBottom: 10,
+                        marginBottom: 9,
                     }}
                 />
-                <Text style={styles.navigationText}>홈</Text>
+                <Text
+                    style={
+                        home
+                            ? { color: theme.textDark }
+                            : { color: theme.iconGray }
+                    }
+                >
+                    홈
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.navigationItem}>
-                <Info style={styles.navigationIcon} />
-                <Text style={styles.navigationText}>정보</Text>
+                <Info
+                    fill={info ? theme.textDark : theme.iconGray}
+                    style={styles.navigationIcon}
+                />
+                <Text
+                    style={
+                        info
+                            ? { color: theme.textDark }
+                            : { color: theme.iconGray }
+                    }
+                >
+                    정보
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.navigationItem}>
-                <Cart style={styles.navigationIcon} />
-                <Text style={styles.navigationText}>쇼핑</Text>
+                <Cart
+                    fill={shopping ? theme.textDark : theme.iconGray}
+                    style={styles.navigationIcon}
+                />
+                <Text
+                    style={
+                        shopping
+                            ? { color: theme.textDark }
+                            : { color: theme.iconGray }
+                    }
+                >
+                    쇼핑
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.navigationItem}>
-                <Chat style={styles.navigationIcon} />
-                <Text style={styles.navigationText}>채팅</Text>
+                <Chat
+                    fill={chatting ? theme.textDark : theme.iconGray}
+                    style={styles.navigationIcon}
+                />
+                <Text
+                    style={
+                        chatting
+                            ? { color: theme.textDark }
+                            : { color: theme.iconGray }
+                    }
+                >
+                    채팅
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.navigationItem}>
                 <Profile
+                    fill={myPage ? theme.textDark : theme.iconGray}
                     style={{
                         marginTop: 15,
                         marginBottom: 8,
                     }}
                 />
-                <Text style={styles.navigationText}>마이페이지</Text>
+                <Text
+                    style={
+                        myPage
+                            ? { color: theme.textDark }
+                            : { color: theme.iconGray }
+                    }
+                >
+                    마이페이지
+                </Text>
             </TouchableOpacity>
         </View>
     );
@@ -60,8 +121,5 @@ const styles = StyleSheet.create({
     navigationIcon: {
         marginTop: 10,
         marginBottom: 7,
-    },
-    navigationText: {
-        color: theme.iconGray,
     },
 });

@@ -56,7 +56,7 @@ const Home = ({ navigation }) => {
                 postsFetched.push({ ...data, key: doc.id });
             });
             setPosts(postsFetched);
-            console.log(postsFetched);
+            // console.log(postsFetched);
         } catch (error) {
             console.log(error.message);
         }
@@ -127,7 +127,14 @@ const Home = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
-            <NavigationBar />
+            <NavigationBar
+                home={false}
+                info={false}
+                shopping={false}
+                chatting={false}
+                myPage={false}
+                navigation={navigation}
+            />
         </View>
     );
 };
