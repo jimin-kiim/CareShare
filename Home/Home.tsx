@@ -7,12 +7,17 @@ import {
     Image,
     DeviceEventEmitter,
 } from "react-native";
+import { Button } from "react-native-elements";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
+import NavigationBar from "../navigationBar";
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post";
 import Arrow from "../assets/ios-arrow-down.svg";
+import { getAuth } from "firebase/auth";
+
+const auth = getAuth();
 const NewPost = ({ text, navigation }) => {
     return (
         <TouchableOpacity
@@ -27,7 +32,7 @@ const Home = ({ navigation }) => {
     const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
-    const { user } = useAuthentication();
+
     useEffect(() => {
         loadPosts();
         DeviceEventEmitter.addListener("toHome", () => {
@@ -51,7 +56,7 @@ const Home = ({ navigation }) => {
                 postsFetched.push({ ...data, key: doc.id });
             });
             setPosts(postsFetched);
-            console.log(postsFetched);
+            // console.log(postsFetched);
         } catch (error) {
             console.log(error.message);
         }
@@ -64,6 +69,7 @@ const Home = ({ navigation }) => {
                     <Arrow style={styles.headerFilterIcon} />
                     <Text style={styles.headerFilterText}>전체</Text>
                 </TouchableOpacity>
+                <Button title="Sign Out" onPress={() => auth.signOut()} />
                 <View style={styles.headerIcons}>
                     <TouchableOpacity>
                         <Ionicons
@@ -99,7 +105,6 @@ const Home = ({ navigation }) => {
                       ))
                     : null}
             </ScrollView>
-
             <View style={styles.newPostContainer}>
                 {clicked ? (
                     <View style={styles.newPostTexts}>
@@ -122,13 +127,21 @@ const Home = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
+            <NavigationBar
+                home={false}
+                info={false}
+                shopping={false}
+                chatting={false}
+                myPage={false}
+                navigation={navigation}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
     },
     header: {
         justifyContent: "space-between",
@@ -164,15 +177,14 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
     },
     newPostTexts: {
-        position: "absolute",
         zIndex: 1,
         backgroundColor: "gray",
         paddingHorizontal: 17,
         paddingTop: 8,
         paddingBottom: 13,
         borderRadius: 10,
-        // marginBottom: 600,
         marginRight: 15,
+        marginBottom: 10,
     },
     newPostText: {
         fontWeight: "600",
@@ -181,10 +193,9 @@ const styles = StyleSheet.create({
         color: theme.textDark,
     },
     newPostButton: {
-        position: "absolute",
         zIndex: 1,
         marginRight: 12,
-        // paddingBottom: 200,
+        marginBottom: 10,
     },
 });
 
