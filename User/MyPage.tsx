@@ -1,14 +1,22 @@
 import { View, StyleSheet, Text } from "react-native";
 import NavigationBar from "../navigationBar";
 import { theme } from "../colors";
+import { getAuth } from "firebase/auth";
+import { useAuthentication } from "../utils/hooks/useAuthentication";
+
+const auth = getAuth();
 
 const MyPage = ({ navigation }) => {
+    const { user } = useAuthentication();
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>마이페이지</Text>
             </View>
-            <View style={styles.profile}></View>
+            <View style={styles.profile}>
+                <View></View>
+                <Text>{user.displayName}</Text>
+            </View>
             <NavigationBar
                 home={false}
                 info={false}

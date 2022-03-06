@@ -3,27 +3,42 @@ import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Picker } from "@react-native-picker/picker";
+import { City, Town } from "./address";
 import {
     getAuth,
     createUserWithEmailAndPassword,
     updateProfile,
     sendEmailVerification,
 } from "firebase/auth";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    setDoc,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
 
 const auth = getAuth();
+const firestore = getFirestore();
 
 const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
-    const [value, setValue] = React.useState({
+    const [userValue, setUserValue] = React.useState({
         email: "",
         password: "",
         id: "",
+        address_city: undefined,
+        address_town: undefined,
         error: "",
     });
 
+    const [city, setCity] = React.useState();
+
     async function signUp() {
-        if (value.email === "" || value.password === "") {
-            setValue({
-                ...value,
+        if (userValue.email === "" || userValue.password === "") {
+            setUserValue({
+                ...userValue,
                 error: "Email and password are mandatory.",
             });
             return;
@@ -32,21 +47,28 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         try {
             await createUserWithEmailAndPassword(
                 auth,
-                value.email,
-                value.password
+                userValue.email,
+                userValue.password
             )
                 .then((userData) => {
                     updateProfile(userData.user, {
-                        displayName: value.id,
+                        displayName: userValue.id,
                         photoURL: "./components/default.png",
                     });
+                    setDoc(
+                        doc(firestore, "users", userData.user.uid, "address"),
+                        {
+                            city: userValue.address_city,
+                            town: userValue.address_town,
+                        }
+                    );
                 })
                 .then(() => {
                     sendEmailVerification(auth.currentUser);
                 });
         } catch (error) {
-            setValue({
-                ...value,
+            setUserValue({
+                ...userValue,
                 error: error.message,
             });
         }
@@ -56,9 +78,9 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         <View style={styles.container}>
             <Text>Signup screen!</Text>
 
-            {!!value.error && (
+            {!!userValue.error && (
                 <View style={styles.error}>
-                    <Text>{value.error}</Text>
+                    <Text>{userValue.error}</Text>
                 </View>
             )}
 
@@ -66,8 +88,10 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 <Input
                     placeholder="Email"
                     containerStyle={styles.control}
-                    value={value.email}
-                    onChangeText={(text) => setValue({ ...value, email: text })}
+                    value={userValue.email}
+                    onChangeText={(text) =>
+                        setUserValue({ ...userValue, email: text })
+                    }
                     // leftIcon={<Icon
                     //   name='envelope'
                     //   size={16} />}
@@ -77,17 +101,19 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 <Input
                     placeholder="ID"
                     containerStyle={styles.control}
-                    value={value.id}
-                    onChangeText={(text) => setValue({ ...value, id: text })}
+                    value={userValue.id}
+                    onChangeText={(text) =>
+                        setUserValue({ ...userValue, id: text })
+                    }
                     autoCompleteType={undefined}
                 />
 
                 <Input
                     placeholder="Password"
                     containerStyle={styles.control}
-                    value={value.password}
+                    value={userValue.password}
                     onChangeText={(text) =>
-                        setValue({ ...value, password: text })
+                        setUserValue({ ...userValue, password: text })
                     }
                     secureTextEntry={true}
                     // leftIcon={<Icon
@@ -95,6 +121,35 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                     //   size={16} />}
                     autoCompleteType={undefined}
                 />
+
+                <Text>Address</Text>
+                <View>
+                    <Picker
+                        selectedValue={userValue.address_city}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setUserValue({
+                                ...userValue,
+                                address_city: itemValue,
+                            })
+                        }
+                    >
+                        <Picker.Item label="시/도 선택" value="" />
+                        <City />
+                    </Picker>
+                    <Picker
+                        selectedValue={userValue.address_town}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setUserValue({
+                                ...userValue,
+                                address_town: itemValue,
+                            });
+                            setCity(itemValue);
+                        }}
+                    >
+                        <Picker.Item label="군/구 선택" value="" />
+                        <Town city={city} />
+                    </Picker>
+                </View>
 
                 <Button
                     title="Sign up"
