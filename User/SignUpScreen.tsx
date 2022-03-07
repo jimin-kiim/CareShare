@@ -96,7 +96,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
     };
 
     const renderTown = (city) => {
-        if (city === "Seoul") {
+        if (city === undefined) {
             return Town[0].map((item) => {
                 return <Picker.Item label={item[0]} value={item[1]} />;
             });
