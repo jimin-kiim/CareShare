@@ -19,6 +19,7 @@ import {
     doc,
     updateDoc,
 } from "firebase/firestore";
+import { useEffect } from "react";
 
 const auth = getAuth();
 const firestore = getFirestore();
@@ -32,9 +33,11 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         address_town: undefined,
         error: "",
     });
-
+    const [locations, setLocation] = React.useState([]);
     const [city, setCity] = React.useState();
-
+    useEffect(() => {
+        getCities();
+    }, []);
     async function signUp() {
         if (userValue.email === "" || userValue.password === "") {
             setUserValue({
@@ -73,14 +76,21 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             });
         }
     }
-
-    const renderCity = async () => {
+    const getCities = async () => {
         const response = await fetch(
             `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000`
         );
         const json = await response.json();
-        console.log(json);
-        return json.regcodes.map((item: { name: string; code: any }) => {
+        setLocation(json.regcodes);
+        console.log("json.regcodes", json.regcodes);
+    };
+
+    const renderCity = async () => {
+        console.log(locations);
+        // locations.map((item) => {
+        //     console.log(item.name);
+        // });
+        locations.map((item) => {
             return <Picker.Item label={item.name} value={item.code} />;
         });
     };
@@ -159,7 +169,14 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         }}
                     >
                         <Picker.Item label="시/도 선택" value="" />
-                        {renderCity()}
+                        {locations.map((item) => {
+                            return (
+                                <Picker.Item
+                                    label={item.name}
+                                    value={item.code}
+                                />
+                            );
+                        })}
                     </Picker>
                     <Picker
                         selectedValue={userValue.address_town}
