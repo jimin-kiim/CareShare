@@ -92,6 +92,7 @@ export default function PostForm({ route, navigation }) {
                 addDoc(collection(firestore, "posts"), {
                     ...content,
                 }).then((docRef) => {
+                    // console.log("docRef", docRef);
                     navigation.navigate("PostDetail", { key: docRef.id });
                 });
             }
@@ -106,17 +107,18 @@ export default function PostForm({ route, navigation }) {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+            base64: true,
         });
-        console.log("result:", result);
+        // console.log("result.base64", result.base64);
         const uploadUri =
             Platform.OS === "ios"
-                ? result.uri.replace("file://", "")
+                ? "data:image/jpeg;base64," + result.base64
                 : result.uri;
         setContent({
             ...content,
             image: uploadUri,
         });
-        console.log(content);
+        // console.log("uploadUri", uploadUri);
     };
 
     return (

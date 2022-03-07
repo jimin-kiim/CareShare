@@ -128,7 +128,7 @@ const Home = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <NavigationBar
-                home={false}
+                home={true}
                 info={false}
                 shopping={false}
                 chatting={false}
