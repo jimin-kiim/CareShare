@@ -70,7 +70,10 @@ export default function NavigationBar({
                     쇼핑
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.navigationItem}>
+            <TouchableOpacity
+                style={styles.navigationItem}
+                onPress={() => navigation.navigate("Chat", { navigation })}
+            >
                 <Chat
                     fill={chatting ? theme.textDark : theme.iconGray}
                     style={styles.navigationIcon}
