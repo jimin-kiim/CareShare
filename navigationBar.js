@@ -99,6 +99,9 @@ export default function NavigationBar({
                             ? { color: theme.textDark }
                             : { color: theme.iconGray }
                     }
+                    onPress={() =>
+                        navigation.navigate("MyPage", { navigation })
+                    }
                 >
                     마이페이지
                 </Text>
