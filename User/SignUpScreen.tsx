@@ -134,7 +134,22 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         }
                     >
                         <Picker.Item label="시/도 선택" value="" />
-                        <City />
+                        <Picker.Item label="서울특별시" value="Seoul" />
+                        <Picker.Item label="인천광역시" value="Incheon" />
+                        <Picker.Item label="대전광역시" value="Daejeon" />
+                        <Picker.Item label="광주광역시" value="Gwangju" />
+                        <Picker.Item label="대구광역시" value="Daegu" />
+                        <Picker.Item label="울산광역시" value="Ulsan" />
+                        <Picker.Item label="부산광역시" value="Busan" />
+                        <Picker.Item label="경기도" value="Gyeonggi" />
+                        <Picker.Item label="강원도" value="Gangwon" />
+                        <Picker.Item label="충청북도" value="Chungbuk" />
+                        <Picker.Item label="충청남도" value="Chungnam" />
+                        <Picker.Item label="전라북도" value="Jeonbuk" />
+                        <Picker.Item label="전라남도" value="Jeonnam" />
+                        <Picker.Item label="경상북도" value="Gyeongbuk" />
+                        <Picker.Item label="경상남도" value="Gyeongnam" />
+                        <Picker.Item label="제주도" value="Jeju" />
                     </Picker>
                     <Picker
                         selectedValue={userValue.address_town}
@@ -144,6 +159,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                 address_town: itemValue,
                             });
                             setCity(itemValue);
+                            console.log(city);
                         }}
                     >
                         <Picker.Item label="군/구 선택" value="" />
