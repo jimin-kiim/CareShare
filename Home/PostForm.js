@@ -22,6 +22,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
+import RNPickerSelect from "react-native-picker-select";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
@@ -92,7 +93,6 @@ export default function PostForm({ route, navigation }) {
                 addDoc(collection(firestore, "posts"), {
                     ...content,
                 }).then((docRef) => {
-                    // console.log("docRef", docRef);
                     navigation.navigate("PostDetail", { key: docRef.id });
                 });
             }
@@ -109,7 +109,6 @@ export default function PostForm({ route, navigation }) {
             quality: 1,
             base64: true,
         });
-        // console.log("result.base64", result.base64);
         const uploadUri =
             Platform.OS === "ios"
                 ? "data:image/jpeg;base64," + result.base64
@@ -165,16 +164,31 @@ export default function PostForm({ route, navigation }) {
             </View>
             <View style={styles.itemContainer}>
                 <Text>타입 : </Text>
+                <RNPickerSelect
+                    placeholder={content.type}
+                    value={content.type}
+                    onValueChange={(payload) =>
+                        setContent({ ...content, type: payload })
+                    }
+                    onClose={() =>
+                        setContent({ ...content, type: content.type })
+                    }
+                    items={[
+                        { label: "빌려드려요", value: "빌려드려요" },
+                        { label: "빌려요", value: "빌려요" },
+                        { label: "나눔해요", value: "나눔해요" },
+                        { label: "판매해요", value: "판매해요" },
+                    ]}
+                />
+                {/* 
                 <TextInput
-                    style={styles.textInput}
                     onBlur={() =>
                         setContent({ ...content, type: content.type })
                     }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, type: payload })
-                    }
+                    // onChangeText={
+                    // }
                     value={content.type}
-                ></TextInput>
+                ></TextInput> */}
             </View>
             <View style={styles.itemContainer}>
                 <Text>가격 : </Text>
