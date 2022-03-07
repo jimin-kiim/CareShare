@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Dimensions } from "react-native";
+import {
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    Dimensions,
+    ScrollView,
+} from "react-native";
 import Arrow from "../assets/ios-arrow-down.svg";
 import Home from "../assets/ios-home.svg";
 import Share from "../assets/ios-share-alt.svg";
@@ -14,13 +20,14 @@ import {
     getDocs,
     collection,
 } from "firebase/firestore";
+import ChatRoom from "./ChatRoom";
 
 const auth = getAuth();
 
 export default function Chat({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
-    const [chatRoom, setChatRoom] = useState({});
+    const [chatRooms, setChatRooms] = useState([]);
     const id = 1;
     const firestore = getFirestore();
 
@@ -32,9 +39,14 @@ export default function Chat({ route, navigation }) {
         try {
             console.log(user.uid);
             const chats = await getDocs(collection(firestore, "chats"));
+            const chattingRooms = [];
+
             chats.forEach((doc) => {
-                console.log(doc.id, doc.data());
+                const data = doc.data();
+                console.log(data);
+                chattingRooms.push({ ...data, key: doc.id });
             });
+            setChatRooms(chattingRooms);
         } catch (error) {
             console.log(error.message);
         }
@@ -57,6 +69,17 @@ export default function Chat({ route, navigation }) {
             </View>
 
             <ScrollView>
+                {chatRooms
+                    ? chatRooms.map((chatRoom) => (
+                          <ChatRoom
+                              name={chatRoom.name}
+                              owner={chatRoom.Owner}
+                              joiner={chatRoom.Joiner}
+                              key={chatRoom.key}
+                              id={chatRoom.id}
+                          ></ChatRoom>
+                      ))
+                    : null}
                 {/* {posts
                     ? posts.map((post) => (
                           <Post
