@@ -27,7 +27,7 @@ export function City() {
 export function Town({ city }) {
     if (city === "Seoul") {
         return (
-            <View>
+            <>
                 <Picker.Item label="강남구" value="Gangnam" />
                 <Picker.Item label="강동구" value="Gangdong" />
                 <Picker.Item label="강북구" value="Gangbuk" />
@@ -53,7 +53,7 @@ export function Town({ city }) {
                 <Picker.Item label="종로구" value="Jongno" />
                 <Picker.Item label="중구" value="S-Jung-gu" />
                 <Picker.Item label="중랑구" value="Jungnang" />
-            </View>
+            </>
         );
     } else if (city === "Incheon") {
         return (
