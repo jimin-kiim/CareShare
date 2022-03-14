@@ -34,6 +34,7 @@ export default function PostForm({ route, navigation }) {
         address: "",
         type: "",
         deposit: "",
+        pref_loan: "",
         price: "",
         writerID: "",
         image: "",
@@ -62,7 +63,6 @@ export default function PostForm({ route, navigation }) {
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
-            // console.log(post);
             setContent({
                 title: post.title,
                 content: post.content,
@@ -70,11 +70,11 @@ export default function PostForm({ route, navigation }) {
                 type: post.type,
                 price: post.price,
                 deposit: post.deposit,
+                pref_loan: post.pref_loan,
                 writerID: post.writerID,
                 image: post.image,
                 createdAt: post.createdAt
             });
-            // console.log(content);
         } catch (error) {
             console.log(error.message);
         }
@@ -182,42 +182,57 @@ export default function PostForm({ route, navigation }) {
                         { label: "판매해요", value: "판매해요" }
                     ]}
                 />
-                {/* 
-                <TextInput
-                    onBlur={() =>
-                        setContent({ ...content, type: content.type })
-                    }
-                    // onChangeText={
-                    // }
-                    value={content.type}
-                ></TextInput> */}
             </View>
-            <View style={styles.itemContainer}>
-                <Text>가격 : </Text>
-                <TextInput
-                    style={styles.textInput}
-                    onBlur={() =>
-                        setContent({ ...content, price: content.price })
-                    }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, price: payload })
-                    }
-                    value={content.price}
-                ></TextInput>
-            </View>
-            <View style={styles.itemContainer}>
-                <Text>보증금 : </Text>
-                <TextInput
-                    style={styles.textInput}
-                    onBlur={() =>
-                        setContent({ ...content, deposit: content.deposit })
-                    }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, deposit: payload })
-                    }
-                    value={content.deposit}
-                ></TextInput>
-            </View>
+
+            {content.type == "빌려요" || content.type == "빌려드려요" ? (
+                <View style={styles.itemContainer}>
+                    <Text>희망 대여금 : </Text>
+                    <TextInput
+                        style={styles.textInput}
+                        onBlur={() =>
+                            setContent({
+                                ...content,
+                                pref_loan: content.pref_loan
+                            })
+                        }
+                        onChangeText={(payload) =>
+                            setContent({ ...content, pref_loan: payload })
+                        }
+                        value={content.pref_loan}
+                    ></TextInput>
+                </View>
+            ) : null}
+
+            {content.type == "판매해요" ? (
+                <View style={styles.itemContainer}>
+                    <Text>가격 : </Text>
+                    <TextInput
+                        style={styles.textInput}
+                        onBlur={() =>
+                            setContent({ ...content, price: content.price })
+                        }
+                        onChangeText={(payload) =>
+                            setContent({ ...content, price: payload })
+                        }
+                        value={content.price}
+                    ></TextInput>
+                </View>
+            ) : null}
+            {content.type == "빌려드려요" || content.type == "판매해요" ? (
+                <View style={styles.itemContainer}>
+                    <Text>보증금 : </Text>
+                    <TextInput
+                        style={styles.textInput}
+                        onBlur={() =>
+                            setContent({ ...content, deposit: content.deposit })
+                        }
+                        onChangeText={(payload) =>
+                            setContent({ ...content, deposit: payload })
+                        }
+                        value={content.deposit}
+                    ></TextInput>
+                </View>
+            ) : null}
 
             <TouchableOpacity onPress={selectImage}>
                 <Text>사진 업로드하기</Text>
