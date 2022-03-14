@@ -62,8 +62,13 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         displayName: userValue.id,
                         photoURL: "./components/default.png",
                     });
-                    setDoc(
-                        doc(firestore, "users", userData.user.uid, "address"),
+                    addDoc(
+                        collection(
+                            firestore,
+                            "users",
+                            userData.user.uid,
+                            "address"
+                        ),
                         {
                             city: userValue.address_city,
                             town: userValue.address_town,
@@ -85,7 +90,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000`
         );
         const json = await response.json();
-        setCityLocation(json);
+        setCityLocation(json.regcodes);
     };
 
     const getTowns = async (city) => {
@@ -156,7 +161,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             );
         }
         const json = await response.json();
-        setTownLocation(json);
+        setTownLocation(json.regcodes);
     };
 
     const renderCity = async () => {
@@ -253,9 +258,10 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                     >
                         <Picker.Item label="군/구 선택" value="" />
                         {townLocations.map((item) => {
+                            const str = item.name;
                             return (
                                 <Picker.Item
-                                    label={item.name}
+                                    label={str.slice(6)}
                                     value={item.code}
                                 />
                             );
