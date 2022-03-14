@@ -33,11 +33,15 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         address_town: undefined,
         error: "",
     });
-    const [locations, setLocation] = React.useState([]);
+    const [cityLocations, setCityLocation] = React.useState([]);
+    const [townLocations, setTownLocation] = React.useState([]);
     const [city, setCity] = React.useState();
     useEffect(() => {
         getCities();
     }, []);
+    useEffect(() => {
+        getTowns(city);
+    }, [city]);
     async function signUp() {
         if (userValue.email === "" || userValue.password === "") {
             setUserValue({
@@ -81,30 +85,90 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000`
         );
         const json = await response.json();
-        setLocation(json.regcodes);
-        console.log("json.regcodes", json.regcodes);
+        setCityLocation(json);
+    };
+
+    const getTowns = async (city) => {
+        let response;
+        if (city === "1100000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=11*`
+            );
+        } else if (city === "2600000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=26*`
+            );
+        } else if (city === "2700000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=27*`
+            );
+        } else if (city === "2800000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=28*`
+            );
+        } else if (city === "2900000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=29*`
+            );
+        } else if (city === "3000000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=30*`
+            );
+        } else if (city === "3100000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=31*`
+            );
+        } else if (city === "4100000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=41*`
+            );
+        } else if (city === "4200000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=42*`
+            );
+        } else if (city === "4300000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=43*`
+            );
+        } else if (city === "4400000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=44*`
+            );
+        } else if (city === "4500000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=45*`
+            );
+        } else if (city === "4600000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=46*`
+            );
+        } else if (city === "4700000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=47*`
+            );
+        } else if (city === "4800000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=48*`
+            );
+        } else if (city === "5000000000") {
+            response = await fetch(
+                `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=50*`
+            );
+        }
+        const json = await response.json();
+        setTownLocation(json);
     };
 
     const renderCity = async () => {
-        console.log(locations);
-        // locations.map((item) => {
-        //     console.log(item.name);
-        // });
-        locations.map((item) => {
+        cityLocations.map((item) => {
             return <Picker.Item label={item.name} value={item.code} />;
         });
     };
 
-    const renderTown = (city) => {
-        if (city === undefined) {
-            return Town[0].map((item) => {
-                return <Picker.Item label={item[0]} value={item[1]} />;
-            });
-        } else if (city === "Incheon") {
-            return Town[1].map((item) => {
-                return <Picker.Item label={item[0]} value={item[1]} />;
-            });
-        }
+    const renderTown = () => {
+        townLocations.map((item) => {
+            return <Picker.Item label={item.name} value={item.code} />;
+        });
     };
 
     return (
@@ -169,7 +233,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         }}
                     >
                         <Picker.Item label="시/도 선택" value="" />
-                        {locations.map((item) => {
+                        {cityLocations.map((item) => {
                             return (
                                 <Picker.Item
                                     label={item.name}
@@ -188,7 +252,14 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         }}
                     >
                         <Picker.Item label="군/구 선택" value="" />
-                        {renderTown(city)}
+                        {townLocations.map((item) => {
+                            return (
+                                <Picker.Item
+                                    label={item.name}
+                                    value={item.code}
+                                />
+                            );
+                        })}
                     </Picker>
                 </View>
 
