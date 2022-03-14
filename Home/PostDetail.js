@@ -8,7 +8,7 @@ import {
     Alert,
     Platform,
     Dimensions,
-    ScrollView,
+    ScrollView
 } from "react-native";
 import { elapsedTime } from "./functions";
 import { theme } from "../colors";
@@ -77,8 +77,8 @@ export default function PostDetail({ route, navigation }) {
                                 navigation.navigate("Home");
                             }
                         );
-                    },
-                },
+                    }
+                }
             ]);
         }
     };
@@ -159,7 +159,9 @@ export default function PostDetail({ route, navigation }) {
                         <Heart style={styles.postHeart} />
                     </TouchableOpacity>
                     <View>
-                        <Text style={styles.postPrice}>보증금: 15,000 원</Text>
+                        <Text style={styles.postPrice}>
+                            보증금: {content.deposit} 원
+                        </Text>
                         <Text style={styles.postPrice}>
                             대여료: {content.price} 원
                         </Text>
@@ -182,55 +184,55 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginHorizontal: 23,
         borderBottomColor: "#F5F5F5",
-        borderBottomWidth: 1,
+        borderBottomWidth: 1
     },
     headerLeft: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "center"
     },
     goBackIcon: {
         width: 20,
         height: 13,
         transform: [{ rotate: "90deg" }],
         marginRight: 14,
-        tintColor: theme.iconGray,
+        tintColor: theme.iconGray
     },
     homeIcon: {
         width: 22,
-        height: 24,
+        height: 24
     },
     shareIcon: {
         width: 24,
-        height: 22,
+        height: 22
     },
     writerInfo: {
         marginHorizontal: 15,
         marginVertical: 15,
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "center"
     },
     writerInfoLeft: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "center"
     },
     profileImg: {
         width: 37,
         height: 37,
-        marginRight: 13,
+        marginRight: 13
     },
     writerName: {
         fontSize: 18,
-        color: theme.textDark,
+        color: theme.textDark
     },
     writerInfoRight: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "center"
     },
     careText: {
         fontSize: 15,
         color: theme.textLight,
-        fontWeight: "500",
+        fontWeight: "500"
     },
     careNum: {
         fontSize: 15,
@@ -242,19 +244,19 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginLeft: 10,
         marginBottom: 2,
-        overflow: "hidden",
+        overflow: "hidden"
     },
     postImg: {
         width: SCREEN_WIDTH,
-        height: SCREEN_WIDTH,
+        height: SCREEN_WIDTH
     },
     postContents: {
-        marginHorizontal: 20,
+        marginHorizontal: 20
     },
     temporary: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "center"
     },
     postType: {
         fontSize: 15,
@@ -265,55 +267,55 @@ const styles = StyleSheet.create({
         paddingHorizontal: 11,
         alignSelf: "flex-start",
         marginVertical: 20,
-        overflow: "hidden",
+        overflow: "hidden"
     },
     forWriter: {
-        flexDirection: "row",
+        flexDirection: "row"
     },
     forWriterText: {
         color: theme.textLight,
-        marginLeft: 10,
+        marginLeft: 10
     },
     postTitle: {
         fontSize: 20,
         color: theme.textDark,
-        fontWeight: "700",
+        fontWeight: "700"
     },
     postInfo: {
         flexDirection: "row",
         paddingTop: 7,
-        paddingBottom: 17,
+        paddingBottom: 17
     },
     postInfoText: {
         fontSize: 15,
-        color: theme.textLight,
+        color: theme.textLight
     },
     postContent: {
         fontSize: 18,
         lineHeight: 26,
-        color: theme.textDark,
+        color: theme.textDark
     },
     contact: {
         flexDirection: "row",
         marginHorizontal: 18,
         justifyContent: "space-between",
         alignItems: "center",
-        paddingVertical: 10,
+        paddingVertical: 10
     },
     contactLeft: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "center"
     },
     postHeart: {
         width: 20,
         height: 18,
         marginRight: 20,
-        marginLeft: 5,
+        marginLeft: 5
     },
     postPrice: {
         fontSize: 18,
         color: theme.textDark,
-        fontWeight: "700",
+        fontWeight: "700"
     },
     chatBtn: {
         backgroundColor: theme.yellow,
@@ -322,6 +324,6 @@ const styles = StyleSheet.create({
         borderRadius: 17,
         fontWeight: "700",
         fontSize: 18,
-        overflow: "hidden",
-    },
+        overflow: "hidden"
+    }
 });

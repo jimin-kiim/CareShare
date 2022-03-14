@@ -10,7 +10,7 @@ import {
     DeviceEventEmitter,
     Alert,
     Image,
-    Platform,
+    Platform
 } from "react-native";
 import {
     getFirestore,
@@ -18,7 +18,7 @@ import {
     addDoc,
     getDoc,
     doc,
-    updateDoc,
+    updateDoc
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
@@ -33,10 +33,11 @@ export default function PostForm({ route, navigation }) {
         content: "",
         address: "",
         type: "",
+        deposit: "",
         price: "",
         writerID: "",
         image: "",
-        createdAt: "",
+        createdAt: ""
     });
 
     useEffect(() => {
@@ -47,7 +48,7 @@ export default function PostForm({ route, navigation }) {
                 ...content,
                 type: route.params.text,
                 writerID: user.uid,
-                createdAt: date,
+                createdAt: date
             });
             // console.log(content);
         }
@@ -68,9 +69,10 @@ export default function PostForm({ route, navigation }) {
                 address: post.address,
                 type: post.type,
                 price: post.price,
+                deposit: post.deposit,
                 writerID: post.writerID,
                 image: post.image,
-                createdAt: post.createdAt,
+                createdAt: post.createdAt
             });
             // console.log(content);
         } catch (error) {
@@ -83,7 +85,7 @@ export default function PostForm({ route, navigation }) {
             if (route.params.key) {
                 const id = route.params.key;
                 updateDoc(doc(firestore, "posts", id), {
-                    ...content,
+                    ...content
                 }).then(() => {
                     navigation.navigate("PostDetail", { key: id });
                     DeviceEventEmitter.emit("toDetail");
@@ -91,7 +93,7 @@ export default function PostForm({ route, navigation }) {
                 });
             } else {
                 addDoc(collection(firestore, "posts"), {
-                    ...content,
+                    ...content
                 }).then((docRef) => {
                     navigation.navigate("PostDetail", { key: docRef.id });
                 });
@@ -107,7 +109,7 @@ export default function PostForm({ route, navigation }) {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
-            base64: true,
+            base64: true
         });
         const uploadUri =
             Platform.OS === "ios"
@@ -115,7 +117,7 @@ export default function PostForm({ route, navigation }) {
                 : result.uri;
         setContent({
             ...content,
-            image: uploadUri,
+            image: uploadUri
         });
         // console.log("uploadUri", uploadUri);
     };
@@ -177,7 +179,7 @@ export default function PostForm({ route, navigation }) {
                         { label: "빌려드려요", value: "빌려드려요" },
                         { label: "빌려요", value: "빌려요" },
                         { label: "나눔해요", value: "나눔해요" },
-                        { label: "판매해요", value: "판매해요" },
+                        { label: "판매해요", value: "판매해요" }
                     ]}
                 />
                 {/* 
@@ -203,6 +205,19 @@ export default function PostForm({ route, navigation }) {
                     value={content.price}
                 ></TextInput>
             </View>
+            <View style={styles.itemContainer}>
+                <Text>보증금 : </Text>
+                <TextInput
+                    style={styles.textInput}
+                    onBlur={() =>
+                        setContent({ ...content, deposit: content.deposit })
+                    }
+                    onChangeText={(payload) =>
+                        setContent({ ...content, deposit: payload })
+                    }
+                    value={content.deposit}
+                ></TextInput>
+            </View>
 
             <TouchableOpacity onPress={selectImage}>
                 <Text>사진 업로드하기</Text>
@@ -213,7 +228,7 @@ export default function PostForm({ route, navigation }) {
                         source={{ uri: content.image }}
                         style={{
                             width: 120,
-                            height: 120,
+                            height: 120
                         }}
                     />
                 ) : null}
@@ -230,20 +245,21 @@ export default function PostForm({ route, navigation }) {
 
 const styles = StyleSheet.create({
     formContainer: {
-        marginTop: 30,
+        marginTop: 30
     },
     itemContainer: {
         flexDirection: "row",
         paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingTop: 20
     },
     textInput: {
         borderColor: theme.textDark,
         borderRadius: 15,
         borderWidth: 1,
+        flex: 1
     },
     button: {
         marginHorizontal: 30,
-        borderRadius: 15,
-    },
+        borderRadius: 15
+    }
 });

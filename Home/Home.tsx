@@ -64,6 +64,9 @@ const Home = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            {/* {clicked ? (
+                <Image source={require("../assets/filter.jpg")} />
+            ) : null} */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerFilter}>
                     <Arrow style={styles.headerFilterIcon} />
