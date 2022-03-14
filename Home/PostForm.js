@@ -167,7 +167,7 @@ export default function PostForm({ route, navigation }) {
             <View style={styles.itemContainer}>
                 <Text>타입 : </Text>
                 <RNPickerSelect
-                    placeholder={content.type}
+                    placeholder={{ label: content.type, value: content.type }}
                     value={content.type}
                     onValueChange={(payload) =>
                         setContent({ ...content, type: payload })
