@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
         paddingTop: 25
     },
     postContent: {
+        flex: 1,
         paddingLeft: 20
     },
     postImg: {
