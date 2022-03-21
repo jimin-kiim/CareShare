@@ -80,21 +80,6 @@ export default function Chat({ route, navigation }) {
                           ></ChatRoom>
                       ))
                     : null}
-                {/* {posts
-                    ? posts.map((post) => (
-                          <Post
-                              key={post.key}
-                              id={post.key}
-                              title={post.title}
-                              address={post.address}
-                              type={post.type}
-                              price={post.price}
-                              image={post.image}
-                              navigation={navigation}
-                              date={post.createdAt}
-                          />
-                      ))
-                    : null} */}
             </ScrollView>
         </View>
     );
