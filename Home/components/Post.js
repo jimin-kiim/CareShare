@@ -9,9 +9,10 @@ export default function Post({
     address,
     type,
     price,
+    pref_loan,
     image,
     navigation,
-    date,
+    date
 }) {
     return (
         <View style={styles.post} key={id}>
@@ -39,7 +40,15 @@ export default function Post({
                 </View>
                 <Text style={styles.postType}>{type}</Text>
                 <View style={styles.postLastInfo}>
-                    <Text style={styles.postPrice}>{price}원</Text>
+                    {type == "판매해요" ? (
+                        <Text style={styles.postPrice}>{price}원</Text>
+                    ) : null}
+                    {type == "나눔해요" ? (
+                        <Text style={styles.postPrice}>0 원</Text>
+                    ) : null}
+                    {type == "빌려요" || type == "빌려드려요" ? (
+                        <Text style={styles.postPrice}>{pref_loan}원</Text>
+                    ) : null}
                     <TouchableOpacity>
                         <Heart style={styles.postHeart} />
                     </TouchableOpacity>
@@ -53,27 +62,27 @@ const styles = StyleSheet.create({
     post: {
         flexDirection: "row",
         paddingHorizontal: 25,
-        paddingTop: 25,
+        paddingTop: 25
     },
     postContent: {
-        paddingLeft: 20,
+        paddingLeft: 20
     },
     postImg: {
         width: 120,
-        height: 120,
+        height: 120
     },
     postTitle: {
         fontSize: 20,
-        color: theme.textDark,
+        color: theme.textDark
     },
     postInfo: {
         flexDirection: "row",
         paddingTop: 5,
-        paddingBottom: 17,
+        paddingBottom: 17
     },
     postInfoText: {
         fontSize: 15,
-        color: theme.textLight,
+        color: theme.textLight
     },
     postType: {
         fontSize: 15,
@@ -83,21 +92,21 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         paddingHorizontal: 11,
         alignSelf: "flex-start",
-        overflow: "hidden",
+        overflow: "hidden"
     },
     postLastInfo: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "space-between"
     },
     postPrice: {
         fontSize: 18,
         color: theme.textDark,
         fontWeight: "700",
-        paddingTop: 6,
+        paddingTop: 6
     },
     postHeart: {
         width: 20,
-        height: 18,
-    },
+        height: 18
+    }
 });

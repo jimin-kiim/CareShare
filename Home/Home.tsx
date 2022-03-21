@@ -101,6 +101,7 @@ const Home = ({ navigation }) => {
                               address={post.address}
                               type={post.type}
                               price={post.price}
+                              pref_loan={post.pref_loan}
                               image={post.image}
                               navigation={navigation}
                               date={post.createdAt}
