@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
-    DeviceEventEmitter,
+    DeviceEventEmitter
 } from "react-native";
 import { Button } from "react-native-elements";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -63,6 +63,9 @@ const Home = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            {/* {clicked ? (
+                <Image source={require("../assets/filter.jpg")} />
+            ) : null} */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerFilter}>
                     <Arrow style={styles.headerFilterIcon} />
@@ -97,6 +100,7 @@ const Home = ({ navigation }) => {
                               address={post.address}
                               type={post.type}
                               price={post.price}
+                              pref_loan={post.pref_loan}
                               image={post.image}
                               navigation={navigation}
                               date={post.createdAt}
@@ -140,7 +144,7 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     header: {
         justifyContent: "space-between",
@@ -149,53 +153,57 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         borderBottomColor: "#F5F5F5",
         borderBottomWidth: 1,
-        marginTop: 30,
-        // zIndex: 10,
-        // position: "absolute",
+        marginTop: 30
     },
     headerFilter: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "center"
     },
     headerFilterText: {
         fontWeight: "700",
         fontSize: 18,
         paddingLeft: 10,
-        color: theme.textDark,
+        color: theme.textDark
     },
     headerIcons: {
-        flexDirection: "row",
+        flexDirection: "row"
     },
     headerFilterIcon: {
         width: 13,
         height: 8,
-        marginBottom: 3,
+        marginBottom: 3
     },
     newPostContainer: {
         alignItems: "flex-end",
-        justifyContent: "flex-end",
+        justifyContent: "flex-end"
     },
     newPostTexts: {
         zIndex: 1,
+        position: "absolute",
+        bottom: 0,
+        right: 0,
         backgroundColor: "gray",
         paddingHorizontal: 17,
         paddingTop: 8,
         paddingBottom: 13,
         borderRadius: 10,
         marginRight: 15,
-        marginBottom: 10,
+        marginBottom: 70
     },
     newPostText: {
         fontWeight: "600",
         paddingTop: 6,
         fontSize: 18,
-        color: theme.textDark,
+        color: theme.textDark
     },
     newPostButton: {
         zIndex: 1,
+        position: "absolute",
+        right: 0,
+        bottom: 0,
         marginRight: 12,
-        marginBottom: 10,
-    },
+        marginBottom: 10
+    }
 });
 
 export default Home;

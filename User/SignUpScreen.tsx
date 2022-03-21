@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Picker } from "@react-native-picker/picker";
-import { City, Town } from "./address";
+import { Town } from "./address";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -19,6 +19,7 @@ import {
     doc,
     updateDoc,
 } from "firebase/firestore";
+import { useEffect } from "react";
 
 const auth = getAuth();
 const firestore = getFirestore();
@@ -32,9 +33,11 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         address_town: undefined,
         error: "",
     });
-
+    const [locations, setLocation] = React.useState([]);
     const [city, setCity] = React.useState();
-
+    useEffect(() => {
+        getCities();
+    }, []);
     async function signUp() {
         if (userValue.email === "" || userValue.password === "") {
             setUserValue({
@@ -73,6 +76,36 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             });
         }
     }
+    const getCities = async () => {
+        const response = await fetch(
+            `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000`
+        );
+        const json = await response.json();
+        setLocation(json.regcodes);
+        console.log("json.regcodes", json.regcodes);
+    };
+
+    const renderCity = async () => {
+        console.log(locations);
+        // locations.map((item) => {
+        //     console.log(item.name);
+        // });
+        locations.map((item) => {
+            return <Picker.Item label={item.name} value={item.code} />;
+        });
+    };
+
+    const renderTown = (city) => {
+        if (city === "Seoul") {
+            return Town[0].map((item) => {
+                return <Picker.Item label={item[0]} value={item[1]} />;
+            });
+        } else if (city === "Incheon") {
+            return Town[1].map((item) => {
+                return <Picker.Item label={item[0]} value={item[1]} />;
+            });
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -126,30 +159,24 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 <View>
                     <Picker
                         selectedValue={userValue.address_city}
-                        onValueChange={(itemValue, itemIndex) =>
+                        onValueChange={(itemValue, itemIndex) => {
                             setUserValue({
                                 ...userValue,
                                 address_city: itemValue,
-                            })
-                        }
+                            });
+                            setCity(itemValue);
+                            console.log(city);
+                        }}
                     >
                         <Picker.Item label="시/도 선택" value="" />
-                        <Picker.Item label="서울특별시" value="Seoul" />
-                        <Picker.Item label="인천광역시" value="Incheon" />
-                        <Picker.Item label="대전광역시" value="Daejeon" />
-                        <Picker.Item label="광주광역시" value="Gwangju" />
-                        <Picker.Item label="대구광역시" value="Daegu" />
-                        <Picker.Item label="울산광역시" value="Ulsan" />
-                        <Picker.Item label="부산광역시" value="Busan" />
-                        <Picker.Item label="경기도" value="Gyeonggi" />
-                        <Picker.Item label="강원도" value="Gangwon" />
-                        <Picker.Item label="충청북도" value="Chungbuk" />
-                        <Picker.Item label="충청남도" value="Chungnam" />
-                        <Picker.Item label="전라북도" value="Jeonbuk" />
-                        <Picker.Item label="전라남도" value="Jeonnam" />
-                        <Picker.Item label="경상북도" value="Gyeongbuk" />
-                        <Picker.Item label="경상남도" value="Gyeongnam" />
-                        <Picker.Item label="제주도" value="Jeju" />
+                        {locations.map((item) => {
+                            return (
+                                <Picker.Item
+                                    label={item.name}
+                                    value={item.code}
+                                />
+                            );
+                        })}
                     </Picker>
                     <Picker
                         selectedValue={userValue.address_town}
@@ -158,12 +185,10 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                 ...userValue,
                                 address_town: itemValue,
                             });
-                            setCity(itemValue);
-                            console.log(city);
                         }}
                     >
                         <Picker.Item label="군/구 선택" value="" />
-                        <Town city={city} />
+                        {renderTown(city)}
                     </Picker>
                 </View>
 
