@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Picker } from "@react-native-picker/picker";
-import { City, Town } from "./address";
+import { Town } from "./address";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -19,6 +19,7 @@ import {
     doc,
     updateDoc,
 } from "firebase/firestore";
+import { useEffect } from "react";
 
 const auth = getAuth();
 const firestore = getFirestore();
@@ -32,9 +33,11 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         address_town: undefined,
         error: "",
     });
-
+    const [locations, setLocation] = React.useState([]);
     const [city, setCity] = React.useState();
-
+    useEffect(() => {
+        getCities();
+    }, []);
     async function signUp() {
         if (userValue.email === "" || userValue.password === "") {
             setUserValue({
@@ -73,6 +76,36 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             });
         }
     }
+    const getCities = async () => {
+        const response = await fetch(
+            `https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000`
+        );
+        const json = await response.json();
+        setLocation(json.regcodes);
+        console.log("json.regcodes", json.regcodes);
+    };
+
+    const renderCity = async () => {
+        console.log(locations);
+        // locations.map((item) => {
+        //     console.log(item.name);
+        // });
+        locations.map((item) => {
+            return <Picker.Item label={item.name} value={item.code} />;
+        });
+    };
+
+    const renderTown = (city) => {
+        if (city === "Seoul") {
+            return Town[0].map((item) => {
+                return <Picker.Item label={item[0]} value={item[1]} />;
+            });
+        } else if (city === "Incheon") {
+            return Town[1].map((item) => {
+                return <Picker.Item label={item[0]} value={item[1]} />;
+            });
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -126,15 +159,24 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 <View>
                     <Picker
                         selectedValue={userValue.address_city}
-                        onValueChange={(itemValue, itemIndex) =>
+                        onValueChange={(itemValue, itemIndex) => {
                             setUserValue({
                                 ...userValue,
                                 address_city: itemValue,
-                            })
-                        }
+                            });
+                            setCity(itemValue);
+                            console.log(city);
+                        }}
                     >
                         <Picker.Item label="시/도 선택" value="" />
-                        <City />
+                        {locations.map((item) => {
+                            return (
+                                <Picker.Item
+                                    label={item.name}
+                                    value={item.code}
+                                />
+                            );
+                        })}
                     </Picker>
                     <Picker
                         selectedValue={userValue.address_town}
@@ -143,11 +185,10 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                 ...userValue,
                                 address_town: itemValue,
                             });
-                            setCity(itemValue);
                         }}
                     >
                         <Picker.Item label="군/구 선택" value="" />
-                        <Town city={city} />
+                        {renderTown(city)}
                     </Picker>
                 </View>
 
