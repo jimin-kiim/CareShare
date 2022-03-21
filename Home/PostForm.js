@@ -33,9 +33,9 @@ export default function PostForm({ route, navigation }) {
         content: "",
         address: "",
         type: "",
-        deposit: "",
-        pref_loan: "",
-        price: "",
+        deposit: "0",
+        pref_loan: "0",
+        price: "0",
         writerID: "",
         image: "",
         createdAt: ""
@@ -84,16 +84,24 @@ export default function PostForm({ route, navigation }) {
         try {
             if (route.params.key) {
                 const id = route.params.key;
+                // console.log(content);
                 updateDoc(doc(firestore, "posts", id), {
-                    ...content
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
                 }).then(() => {
                     navigation.navigate("PostDetail", { key: id });
                     DeviceEventEmitter.emit("toDetail");
                     console.log("edit complete");
                 });
             } else {
+                // console.log(content);
                 addDoc(collection(firestore, "posts"), {
-                    ...content
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
                 }).then((docRef) => {
                     navigation.navigate("PostDetail", { key: docRef.id });
                 });
