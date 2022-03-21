@@ -158,14 +158,34 @@ export default function PostDetail({ route, navigation }) {
                     <TouchableOpacity>
                         <Heart style={styles.postHeart} />
                     </TouchableOpacity>
-                    <View>
-                        <Text style={styles.postPrice}>
-                            보증금: {content.deposit} 원
-                        </Text>
-                        <Text style={styles.postPrice}>
-                            대여료: {content.price} 원
-                        </Text>
-                    </View>
+
+                    {content.type == "빌려요" ? (
+                        <View>
+                            <Text style={styles.postPrice}>
+                                희망 대여금: {content.pref_loan} 원
+                            </Text>
+                        </View>
+                    ) : null}
+                    {content.type == "판매해요" ? (
+                        <View>
+                            <Text style={styles.postPrice}>
+                                보증금: {content.deposit} 원
+                            </Text>
+                            <Text style={styles.postPrice}>
+                                가격: {content.price} 원
+                            </Text>
+                        </View>
+                    ) : null}
+                    {content.type == "빌려드려요" ? (
+                        <View>
+                            <Text style={styles.postPrice}>
+                                보증금: {content.deposit} 원
+                            </Text>
+                            <Text style={styles.postPrice}>
+                                희망 대여금: {content.pref_loan} 원
+                            </Text>
+                        </View>
+                    ) : null}
                 </View>
                 <TouchableOpacity>
                     <Text style={styles.chatBtn}>채팅 보내기</Text>
