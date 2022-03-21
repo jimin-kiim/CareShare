@@ -8,6 +8,7 @@ const auth = getAuth();
 
 const MyPage = ({ navigation }) => {
     const { user } = useAuthentication();
+    user.reload();
     return (
         <View style={styles.container}>
             <View style={styles.header}>

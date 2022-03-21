@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Picker } from "@react-native-picker/picker";
-import { Town } from "./address";
+
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -62,6 +62,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         displayName: userValue.id,
                         photoURL: "./components/default.png",
                     });
+                    console.log(userData.user.displayName);
                     addDoc(
                         collection(
                             firestore,
@@ -234,7 +235,6 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                 address_city: itemValue,
                             });
                             setCity(itemValue);
-                            console.log(city);
                         }}
                     >
                         <Picker.Item label="시/도 선택" value="" />
@@ -259,12 +259,35 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         <Picker.Item label="군/구 선택" value="" />
                         {townLocations.map((item) => {
                             const str = item.name;
-                            return (
-                                <Picker.Item
-                                    label={str.slice(6)}
-                                    value={item.code}
-                                />
-                            );
+                            if (parseInt(item.code) <= 3100000000) {
+                                return (
+                                    <Picker.Item
+                                        label={str.slice(6)}
+                                        value={item.code}
+                                    />
+                                );
+                            } else if (parseInt(item.code) <= 4200000000) {
+                                return (
+                                    <Picker.Item
+                                        label={str.slice(4)}
+                                        value={item.code}
+                                    />
+                                );
+                            } else if (parseInt(item.code) <= 4800000000) {
+                                return (
+                                    <Picker.Item
+                                        label={str.slice(5)}
+                                        value={item.code}
+                                    />
+                                );
+                            } else {
+                                return (
+                                    <Picker.Item
+                                        label={str.slice(8)}
+                                        value={item.code}
+                                    />
+                                );
+                            }
                         })}
                     </Picker>
                 </View>
