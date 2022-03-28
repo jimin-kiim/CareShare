@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,12 +7,23 @@ import { Input, Button } from 'react-native-elements';
 import { StackScreenProps } from '@react-navigation/stack';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 =======
+=======
+>>>>>>> Stashed changes
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackScreenProps } from "@react-navigation/stack";
+<<<<<<< Updated upstream
 import { Picker } from "@react-native-picker/picker";
+=======
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    sendEmailVerification
+} from "firebase/auth";
+>>>>>>> Stashed changes
 
 import {
     getAuth,
@@ -33,6 +45,7 @@ import { useEffect } from "react";
 const auth = getAuth();
 
 const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   const [value, setValue] = React.useState({
     email: '',
@@ -62,51 +75,102 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         ...value,
         error: error.message,
       })
+=======
+    const [value, setValue] = React.useState({
+        email: "",
+        password: "",
+        id: "",
+        error: ""
+    });
+
+    async function signUp() {
+        if (value.email === "" || value.password === "") {
+            setValue({
+                ...value,
+                error: "Email and password are mandatory."
+            });
+            return;
+        }
+
+        try {
+            await createUserWithEmailAndPassword(
+                auth,
+                value.email,
+                value.password
+            )
+                .then((userData) => {
+                    updateProfile(userData.user, { displayName: value.id });
+                    console.log(userData.user);
+                })
+                .then(() => {
+                    sendEmailVerification(auth.currentUser);
+                });
+            await navigation.navigate("Sign In");
+        } catch (error) {
+            setValue({
+                ...value,
+                error: error.message
+            });
+        }
+>>>>>>> Stashed changes
     }
-  }
 
-  return (
-    <View style={styles.container}>
-      <Text>Signup screen!</Text>
+    return (
+        <View style={styles.container}>
+            <Text>Signup screen!</Text>
 
-      {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
+            {!!value.error && (
+                <View style={styles.error}>
+                    <Text>{value.error}</Text>
+                </View>
+            )}
 
-      <View style={styles.controls}>
-        <Input
-          placeholder='Email'
-          containerStyle={styles.control}
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
-          // leftIcon={<Icon
-          //   name='envelope'
-          //   size={16} />} 
-          autoCompleteType={undefined}        />
+            <View style={styles.controls}>
+                <Input
+                    placeholder="Email"
+                    containerStyle={styles.control}
+                    value={value.email}
+                    onChangeText={(text) => setValue({ ...value, email: text })}
+                    // leftIcon={<Icon
+                    //   name='envelope'
+                    //   size={16} />}
+                    autoCompleteType={undefined}
+                />
 
-        <Input
-            placeholder='ID'
-            containerStyle={styles.control}
-            value={value.id}
-            onChangeText={(text) => setValue({ ...value, id: text})}
-            autoCompleteType={undefined} />
+                <Input
+                    placeholder="ID"
+                    containerStyle={styles.control}
+                    value={value.id}
+                    onChangeText={(text) => setValue({ ...value, id: text })}
+                    autoCompleteType={undefined}
+                />
 
-        <Input
-          placeholder='Password'
-          containerStyle={styles.control}
-          value={value.password}
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          secureTextEntry={true}
-          // leftIcon={<Icon
-          //   name='key'
-          //   size={16} />} 
-          autoCompleteType={undefined}        />
+                <Input
+                    placeholder="Password"
+                    containerStyle={styles.control}
+                    value={value.password}
+                    onChangeText={(text) =>
+                        setValue({ ...value, password: text })
+                    }
+                    secureTextEntry={true}
+                    // leftIcon={<Icon
+                    //   name='key'
+                    //   size={16} />}
+                    autoCompleteType={undefined}
+                />
 
-        <Button title="Sign up" buttonStyle={styles.control} onPress={signUp} />
-      </View>
-    </View>
-  );
-}
+                <Button
+                    title="Sign up"
+                    buttonStyle={styles.control}
+                    onPress={signUp}
+                />
+            </View>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
+<<<<<<< Updated upstream
   container: {
     flex: 1,
     paddingTop: 20,
@@ -410,6 +474,8 @@ const styles = StyleSheet.create({
 };
 
 const styles = StyleSheet.create({
+=======
+>>>>>>> Stashed changes
     container: {
         flex: 1,
         paddingTop: 20,
@@ -433,6 +499,9 @@ const styles = StyleSheet.create({
         color: "#fff",
         backgroundColor: "#D54826FF"
     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 });
 

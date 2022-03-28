@@ -8,7 +8,6 @@ import {
     TextInput,
     Button,
     DeviceEventEmitter,
-    Alert,
     Image,
     Platform
 } from "react-native";
@@ -28,6 +27,14 @@ export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
     const firestore = getFirestore();
+    const [filledIn, setFilledIn] = useState({
+        title: true,
+        content: true,
+        deposit: true,
+        pref_loan: true,
+        price: true,
+        image: true
+    });
     const [content, setContent] = useState({
         title: "",
         content: "",
@@ -40,6 +47,7 @@ export default function PostForm({ route, navigation }) {
         image: "",
         createdAt: ""
     });
+    const [confirmed, setConfirmed] = useState(false);
 
     useEffect(() => {
         if (route.params.key) {
@@ -93,7 +101,6 @@ export default function PostForm({ route, navigation }) {
                 }).then(() => {
                     navigation.navigate("PostDetail", { key: id });
                     DeviceEventEmitter.emit("toDetail");
-                    console.log("edit complete");
                 });
             } else {
                 // console.log(content);
@@ -110,7 +117,26 @@ export default function PostForm({ route, navigation }) {
             console.log(error.message);
         }
     };
-
+    const checkBlanks = () => {
+        if (content.title == "") {
+            setFilledIn({ ...filledIn, title: false });
+        }
+        if (content.content == "") {
+            setFilledIn({ ...filledIn, content: false });
+        }
+        if (content.deposit == "0") {
+            setFilledIn({ ...filledIn, deposit: false });
+        }
+        if (content.pref_loan == "0") {
+            setFilledIn({ ...filledIn, pref_loan: false });
+        }
+        if (content.price == "0") {
+            setFilledIn({ ...filledIn, price: false });
+        }
+        if (content.image == "") {
+            setFilledIn({ ...filledIn, image: false });
+        }
+    };
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
