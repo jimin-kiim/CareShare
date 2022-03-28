@@ -8,7 +8,6 @@ import {
     TextInput,
     Button,
     DeviceEventEmitter,
-    Alert,
     Image,
     Platform
 } from "react-native";
@@ -28,18 +27,27 @@ export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
     const firestore = getFirestore();
+    const [filledIn, setFilledIn] = useState({
+        title: true,
+        content: true,
+        deposit: true,
+        pref_loan: true,
+        price: true,
+        image: true
+    });
     const [content, setContent] = useState({
         title: "",
         content: "",
         address: "",
         type: "",
-        deposit: "",
-        pref_loan: "",
-        price: "",
+        deposit: "0",
+        pref_loan: "0",
+        price: "0",
         writerID: "",
         image: "",
         createdAt: ""
     });
+    const [confirmed, setConfirmed] = useState(true);
 
     useEffect(() => {
         if (route.params.key) {
@@ -79,30 +87,26 @@ export default function PostForm({ route, navigation }) {
             console.log(error.message);
         }
     };
-
-    const savePost = async () => {
-        try {
-            if (route.params.key) {
-                const id = route.params.key;
-                updateDoc(doc(firestore, "posts", id), {
-                    ...content
-                }).then(() => {
-                    navigation.navigate("PostDetail", { key: id });
-                    DeviceEventEmitter.emit("toDetail");
-                    console.log("edit complete");
-                });
-            } else {
-                addDoc(collection(firestore, "posts"), {
-                    ...content
-                }).then((docRef) => {
-                    navigation.navigate("PostDetail", { key: docRef.id });
-                });
-            }
-        } catch (error) {
-            console.log(error.message);
+    const checkBlanks = () => {
+        if (content.title == "") {
+            setFilledIn({ ...filledIn, title: false });
+        }
+        if (content.content == "") {
+            setFilledIn({ ...filledIn, content: false });
+        }
+        if (content.deposit == "0") {
+            setFilledIn({ ...filledIn, deposit: false });
+        }
+        if (content.pref_loan == "0") {
+            setFilledIn({ ...filledIn, pref_loan: false });
+        }
+        if (content.price == "0") {
+            setFilledIn({ ...filledIn, price: false });
+        }
+        if (content.image == "") {
+            setFilledIn({ ...filledIn, image: false });
         }
     };
-
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -120,6 +124,43 @@ export default function PostForm({ route, navigation }) {
             image: uploadUri
         });
         // console.log("uploadUri", uploadUri);
+    };
+
+    const savePost = async () => {
+        checkBlanks();
+        console.log(Object.values(filledIn));
+        const values = Object.values(filledIn);
+        if (values.includes(false)) {
+            setConfirmed(false);
+        } else {
+            try {
+                if (route.params.key) {
+                    const id = route.params.key;
+                    // console.log(content);
+                    updateDoc(doc(firestore, "posts", id), {
+                        ...content,
+                        price: parseInt(content.price),
+                        deposit: parseInt(content.deposit),
+                        pref_loan: parseInt(content.pref_loan)
+                    }).then(() => {
+                        navigation.navigate("PostDetail", { key: id });
+                        DeviceEventEmitter.emit("toDetail");
+                    });
+                } else {
+                    // console.log(content);
+                    addDoc(collection(firestore, "posts"), {
+                        ...content,
+                        price: parseInt(content.price),
+                        deposit: parseInt(content.deposit),
+                        pref_loan: parseInt(content.pref_loan)
+                    }).then((docRef) => {
+                        navigation.navigate("PostDetail", { key: docRef.id });
+                    });
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
     };
 
     return (
@@ -254,6 +295,7 @@ export default function PostForm({ route, navigation }) {
                 style={styles.button}
                 onPress={() => savePost()}
             ></Button>
+            {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
     );
 }
