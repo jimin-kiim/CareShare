@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import NavigationBar from "../navigationBar";
 import { theme } from "../colors";
 import { getAuth } from "firebase/auth";
@@ -8,24 +8,33 @@ const auth = getAuth();
 
 const MyPage = ({ navigation }) => {
     const { user } = useAuthentication();
-    user.reload();
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>마이페이지</Text>
-            </View>
-            <View style={styles.profile}>
-                <View></View>
-                <Text>{user.displayName}</Text>
-            </View>
-            <NavigationBar
-                home={false}
-                info={false}
-                shopping={false}
-                chatting={false}
-                myPage={true}
-                navigation={navigation}
-            />
+            {user ? (
+                <View>
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>마이페이지</Text>
+                    </View>
+                    <View style={styles.profile}>
+                        <View style={styles.profileImage}>
+                            <Image
+                                source={require("../assets/defaultProfile.png")}
+                            />
+                        </View>
+                        <Text>{user.displayName}</Text>
+                    </View>
+                    <NavigationBar
+                        home={false}
+                        info={false}
+                        shopping={false}
+                        chatting={false}
+                        myPage={true}
+                        navigation={navigation}
+                    />
+                </View>
+            ) : (
+                <Text>user is undefined</Text>
+            )}
         </View>
     );
 };
@@ -51,6 +60,12 @@ const styles = StyleSheet.create({
     },
     profile: {
         flexDirection: "row",
+    },
+    profileImage: {
+        backgroundColor: "#E8E8E8",
+        borderRadius: 20,
+        width: 100,
+        height: 100,
     },
 });
 
