@@ -10,7 +10,7 @@ import {
     DeviceEventEmitter,
     Alert,
     Image,
-    Platform
+    Platform,
 } from "react-native";
 import {
     getFirestore,
@@ -18,11 +18,11 @@ import {
     addDoc,
     getDoc,
     doc,
-    updateDoc
+    updateDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
@@ -38,7 +38,7 @@ export default function PostForm({ route, navigation }) {
         price: "",
         writerID: "",
         image: "",
-        createdAt: ""
+        createdAt: "",
     });
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function PostForm({ route, navigation }) {
                 ...content,
                 type: route.params.text,
                 writerID: user.uid,
-                createdAt: date
+                createdAt: date,
             });
             // console.log(content);
         }
@@ -73,7 +73,7 @@ export default function PostForm({ route, navigation }) {
                 pref_loan: post.pref_loan,
                 writerID: post.writerID,
                 image: post.image,
-                createdAt: post.createdAt
+                createdAt: post.createdAt,
             });
         } catch (error) {
             console.log(error.message);
@@ -85,7 +85,7 @@ export default function PostForm({ route, navigation }) {
             if (route.params.key) {
                 const id = route.params.key;
                 updateDoc(doc(firestore, "posts", id), {
-                    ...content
+                    ...content,
                 }).then(() => {
                     navigation.navigate("PostDetail", { key: id });
                     DeviceEventEmitter.emit("toDetail");
@@ -93,7 +93,7 @@ export default function PostForm({ route, navigation }) {
                 });
             } else {
                 addDoc(collection(firestore, "posts"), {
-                    ...content
+                    ...content,
                 }).then((docRef) => {
                     navigation.navigate("PostDetail", { key: docRef.id });
                 });
@@ -109,7 +109,7 @@ export default function PostForm({ route, navigation }) {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
-            base64: true
+            base64: true,
         });
         const uploadUri =
             Platform.OS === "ios"
@@ -117,7 +117,7 @@ export default function PostForm({ route, navigation }) {
                 : result.uri;
         setContent({
             ...content,
-            image: uploadUri
+            image: uploadUri,
         });
         // console.log("uploadUri", uploadUri);
     };
@@ -179,7 +179,7 @@ export default function PostForm({ route, navigation }) {
                         { label: "빌려드려요", value: "빌려드려요" },
                         { label: "빌려요", value: "빌려요" },
                         { label: "나눔해요", value: "나눔해요" },
-                        { label: "판매해요", value: "판매해요" }
+                        { label: "판매해요", value: "판매해요" },
                     ]}
                 />
             </View>
@@ -192,7 +192,7 @@ export default function PostForm({ route, navigation }) {
                         onBlur={() =>
                             setContent({
                                 ...content,
-                                pref_loan: content.pref_loan
+                                pref_loan: content.pref_loan,
                             })
                         }
                         onChangeText={(payload) =>
@@ -243,7 +243,7 @@ export default function PostForm({ route, navigation }) {
                         source={{ uri: content.image }}
                         style={{
                             width: 120,
-                            height: 120
+                            height: 120,
                         }}
                     />
                 ) : null}
@@ -260,21 +260,21 @@ export default function PostForm({ route, navigation }) {
 
 const styles = StyleSheet.create({
     formContainer: {
-        marginTop: 30
+        marginTop: 30,
     },
     itemContainer: {
         flexDirection: "row",
         paddingHorizontal: 20,
-        paddingTop: 20
+        paddingTop: 20,
     },
     textInput: {
         borderColor: theme.textDark,
         borderRadius: 15,
         borderWidth: 1,
-        flex: 1
+        flex: 1,
     },
     button: {
         marginHorizontal: 30,
-        borderRadius: 15
-    }
+        borderRadius: 15,
+    },
 });
