@@ -47,7 +47,7 @@ export default function PostForm({ route, navigation }) {
         image: "",
         createdAt: ""
     });
-    const [confirmed, setConfirmed] = useState(false);
+    const [confirmed, setConfirmed] = useState(true);
 
     useEffect(() => {
         if (route.params.key) {
@@ -83,36 +83,6 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt
             });
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    const savePost = async () => {
-        try {
-            if (route.params.key) {
-                const id = route.params.key;
-                // console.log(content);
-                updateDoc(doc(firestore, "posts", id), {
-                    ...content,
-                    price: parseInt(content.price),
-                    deposit: parseInt(content.deposit),
-                    pref_loan: parseInt(content.pref_loan)
-                }).then(() => {
-                    navigation.navigate("PostDetail", { key: id });
-                    DeviceEventEmitter.emit("toDetail");
-                });
-            } else {
-                // console.log(content);
-                addDoc(collection(firestore, "posts"), {
-                    ...content,
-                    price: parseInt(content.price),
-                    deposit: parseInt(content.deposit),
-                    pref_loan: parseInt(content.pref_loan)
-                }).then((docRef) => {
-                    navigation.navigate("PostDetail", { key: docRef.id });
-                });
-            }
         } catch (error) {
             console.log(error.message);
         }
@@ -154,6 +124,43 @@ export default function PostForm({ route, navigation }) {
             image: uploadUri
         });
         // console.log("uploadUri", uploadUri);
+    };
+
+    const savePost = async () => {
+        checkBlanks();
+        console.log(Object.values(filledIn));
+        const values = Object.values(filledIn);
+        if (values.includes(false)) {
+            setConfirmed(false);
+        } else {
+            try {
+                if (route.params.key) {
+                    const id = route.params.key;
+                    // console.log(content);
+                    updateDoc(doc(firestore, "posts", id), {
+                        ...content,
+                        price: parseInt(content.price),
+                        deposit: parseInt(content.deposit),
+                        pref_loan: parseInt(content.pref_loan)
+                    }).then(() => {
+                        navigation.navigate("PostDetail", { key: id });
+                        DeviceEventEmitter.emit("toDetail");
+                    });
+                } else {
+                    // console.log(content);
+                    addDoc(collection(firestore, "posts"), {
+                        ...content,
+                        price: parseInt(content.price),
+                        deposit: parseInt(content.deposit),
+                        pref_loan: parseInt(content.pref_loan)
+                    }).then((docRef) => {
+                        navigation.navigate("PostDetail", { key: docRef.id });
+                    });
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
     };
 
     return (
@@ -288,6 +295,7 @@ export default function PostForm({ route, navigation }) {
                 style={styles.button}
                 onPress={() => savePost()}
             ></Button>
+            {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
     );
 }
