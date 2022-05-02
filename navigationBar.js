@@ -14,7 +14,6 @@ export default function NavigationBar({
     myPage,
     navigation,
 }) {
-    console.log(home);
     return (
         <View style={styles.naviationBar}>
             <TouchableOpacity
