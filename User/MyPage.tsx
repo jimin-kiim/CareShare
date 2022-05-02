@@ -21,7 +21,9 @@ const MyPage = ({ navigation }) => {
                                 source={require("../assets/defaultProfile.png")}
                             />
                         </View>
-                        <Text>{user.displayName}</Text>
+                        <Text style={{ paddingLeft: 10, paddingTop: 12 }}>
+                            {user.displayName}
+                        </Text>
                     </View>
                     <NavigationBar
                         home={false}
@@ -60,12 +62,15 @@ const styles = StyleSheet.create({
     },
     profile: {
         flexDirection: "row",
+        paddingLeft: 20,
     },
     profileImage: {
         backgroundColor: "#E8E8E8",
-        borderRadius: 20,
-        width: 100,
-        height: 100,
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });
 
