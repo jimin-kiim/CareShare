@@ -59,7 +59,6 @@ export default function PostForm({ route, navigation }) {
                 writerID: user.uid,
                 createdAt: date
             });
-            // console.log(content);
         }
         return () => {
             console.log("unmount form");
@@ -87,6 +86,24 @@ export default function PostForm({ route, navigation }) {
             console.log(error.message);
         }
     };
+    const selectImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true
+        });
+        const uploadUri =
+            Platform.OS === "ios"
+                ? "data:image/jpeg;base64," + result.base64
+                : result.uri;
+        setContent({
+            ...content,
+            image: uploadUri
+        });
+    };
+
     const checkBlanks = () => {
         if (content.title == "") {
             setFilledIn({ ...filledIn, title: false });
@@ -107,29 +124,9 @@ export default function PostForm({ route, navigation }) {
             setFilledIn({ ...filledIn, image: false });
         }
     };
-    const selectImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-            base64: true
-        });
-        const uploadUri =
-            Platform.OS === "ios"
-                ? "data:image/jpeg;base64," + result.base64
-                : result.uri;
-        setContent({
-            ...content,
-            image: uploadUri
-        });
-        // console.log("uploadUri", uploadUri);
-    };
-
     const savePost = async () => {
-        checkBlanks();
-        console.log(Object.values(filledIn));
         const values = Object.values(filledIn);
+        console.log(values);
         if (values.includes(false)) {
             setConfirmed(false);
         } else {
@@ -293,7 +290,10 @@ export default function PostForm({ route, navigation }) {
             <Button
                 title="저장"
                 style={styles.button}
-                onPress={() => savePost()}
+                onPress={() => {
+                    checkBlanks();
+                    savePost();
+                }}
             ></Button>
             {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
