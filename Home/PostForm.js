@@ -21,13 +21,13 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
     const firestore = getFirestore();
-    const [filledIn, setFilledIn] = useState({
+    const [isFilledIn, setIsFilledIn] = useState({
         title: true,
         content: true,
         deposit: true,
@@ -105,59 +105,91 @@ export default function PostForm({ route, navigation }) {
     };
 
     const checkBlanks = () => {
+        // console.log(content);
         if (content.title == "") {
-            setFilledIn({ ...filledIn, title: false });
+            console.log("들어옴");
+
+            // setIsFilledIn({ ...isFilledIn, title: false });
+            setIsFilledIn((isFilledIn) => {
+                // console.log("들어옴");
+                // console.log(isFilledIn);
+                return { ...isFilledIn, title: false };
+            });
+            const values = Object.values(isFilledIn);
+            console.log(values);
+            // var newFilled = [...isFilledIn];
+            // newFilled[0] = false;
+            // setIsFilledIn(newFilled);
+            // console.log("false");
+            // const values = Object.values(isFilledIn);
+            // console.log(values);
         }
         if (content.content == "") {
-            setFilledIn({ ...filledIn, content: false });
+            // setIsFilledIn({ ...isFilledIn, content: false });
         }
         if (content.deposit == "0") {
-            setFilledIn({ ...filledIn, deposit: false });
+            // setIsFilledIn({ ...isFilledIn, deposit: false });
         }
         if (content.pref_loan == "0") {
-            setFilledIn({ ...filledIn, pref_loan: false });
+            // setIsFilledIn({ ...isFilledIn, pref_loan: false });
         }
         if (content.price == "0") {
-            setFilledIn({ ...filledIn, price: false });
+            // setIsFilledIn({ ...isFilledIn, price: false });
         }
         if (content.image == "") {
-            setFilledIn({ ...filledIn, image: false });
+            // setIsFilledIn({ ...isFilledIn, image: false });
         }
-    };
-    const savePost = async () => {
-        const values = Object.values(filledIn);
+        const values = Object.values(isFilledIn);
         console.log(values);
+    };
+
+    const test = () => {
+        const values = Object.values(isFilledIn);
+        console.log(values);
+        // const values = Object.values(isFilledIn);
+        console.log(isFilledIn);
         if (values.includes(false)) {
             setConfirmed(false);
         } else {
-            try {
-                if (route.params.key) {
-                    const id = route.params.key;
-                    // console.log(content);
-                    updateDoc(doc(firestore, "posts", id), {
-                        ...content,
-                        price: parseInt(content.price),
-                        deposit: parseInt(content.deposit),
-                        pref_loan: parseInt(content.pref_loan)
-                    }).then(() => {
-                        navigation.navigate("PostDetail", { key: id });
-                        DeviceEventEmitter.emit("toDetail");
-                    });
-                } else {
-                    // console.log(content);
-                    addDoc(collection(firestore, "posts"), {
-                        ...content,
-                        price: parseInt(content.price),
-                        deposit: parseInt(content.deposit),
-                        pref_loan: parseInt(content.pref_loan)
-                    }).then((docRef) => {
-                        navigation.navigate("PostDetail", { key: docRef.id });
-                    });
-                }
-            } catch (error) {
-                console.log(error.message);
-            }
+            console.log(content);
+            savePost();
         }
+    };
+    const savePost = async () => {
+        // checkBlanks();
+        // const values = Object.values(isFilledIn);
+        // console.log(values);
+        // if (values.includes(false)) {
+        //     setConfirmed(false);
+        // } else {
+        try {
+            if (route.params.key) {
+                const id = route.params.key;
+                // console.log(content);
+                updateDoc(doc(firestore, "posts", id), {
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
+                }).then(() => {
+                    navigation.navigate("PostDetail", { key: id });
+                    DeviceEventEmitter.emit("toDetail");
+                });
+            } else {
+                // console.log(content);
+                addDoc(collection(firestore, "posts"), {
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
+                }).then((docRef) => {
+                    navigation.navigate("PostDetail", { key: docRef.id });
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+        // }
     };
 
     return (
@@ -169,9 +201,9 @@ export default function PostForm({ route, navigation }) {
                     onBlur={() =>
                         setContent({ ...content, title: content.title })
                     }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, title: payload })
-                    }
+                    onChangeText={(payload) => {
+                        setContent({ ...content, title: payload });
+                    }}
                     value={content.title}
                 ></TextInput>
             </View>
@@ -204,7 +236,7 @@ export default function PostForm({ route, navigation }) {
             </View>
             <View style={styles.itemContainer}>
                 <Text>타입 : </Text>
-                <RNPickerSelect
+                {/* <RNPickerSelect
                     placeholder={{ label: content.type, value: content.type }}
                     value={content.type}
                     onValueChange={(payload) =>
@@ -219,7 +251,7 @@ export default function PostForm({ route, navigation }) {
                         { label: "나눔해요", value: "나눔해요" },
                         { label: "판매해요", value: "판매해요" }
                     ]}
-                />
+                /> */}
             </View>
 
             {content.type == "빌려요" || content.type == "빌려드려요" ? (
@@ -290,10 +322,22 @@ export default function PostForm({ route, navigation }) {
             <Button
                 title="저장"
                 style={styles.button}
-                onPress={() => {
-                    checkBlanks();
-                    savePost();
-                }}
+                onPress={checkBlanks}
+                // onPress={() => {
+                //     // event.preventDefault();
+                //     checkBlanks(){
+
+                //     };
+                //     // setIsFilledIn((isFilledIn) => {
+                //     //     console.log("들어옴");
+                //     //     console.log(isFilledIn);
+                //     //     return { ...isFilledIn, title: false };
+                //     // });
+                //     // test();
+                //     // const values = Object.values(isFilledIn);
+                //     // console.log(values);
+                //     // savePost();
+                // }}
             ></Button>
             {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
