@@ -32,7 +32,6 @@ const Home = ({ navigation }) => {
     const firestore = getFirestore();
     const [posts, setPosts] = useState([]);
     const [clicked, setClicked] = useState(false);
-
     useEffect(() => {
         loadPosts();
         DeviceEventEmitter.addListener("toHome", () => {

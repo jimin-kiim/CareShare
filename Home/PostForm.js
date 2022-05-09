@@ -21,13 +21,13 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
-import RNPickerSelect from "react-native-picker-select";
+// import RNPickerSelect from "react-native-picker-select";
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
     const user = auth.currentUser;
     const firestore = getFirestore();
-    const [filledIn, setFilledIn] = useState({
+    const [isFilledIn, setIsFilledIn] = useState({
         title: true,
         content: true,
         deposit: true,
@@ -59,12 +59,19 @@ export default function PostForm({ route, navigation }) {
                 writerID: user.uid,
                 createdAt: date
             });
-            // console.log(content);
         }
         return () => {
             console.log("unmount form");
         };
     }, []);
+
+    useEffect(() => {
+        if (Object.keys(isFilledIn).every((v) => v)) {
+            savePost();
+        } else {
+            setConfirmed(false);
+        }
+    }, [isFilledIn]);
 
     const loadPost = async (id) => {
         try {
@@ -87,26 +94,6 @@ export default function PostForm({ route, navigation }) {
             console.log(error.message);
         }
     };
-    const checkBlanks = () => {
-        if (content.title == "") {
-            setFilledIn({ ...filledIn, title: false });
-        }
-        if (content.content == "") {
-            setFilledIn({ ...filledIn, content: false });
-        }
-        if (content.deposit == "0") {
-            setFilledIn({ ...filledIn, deposit: false });
-        }
-        if (content.pref_loan == "0") {
-            setFilledIn({ ...filledIn, pref_loan: false });
-        }
-        if (content.price == "0") {
-            setFilledIn({ ...filledIn, price: false });
-        }
-        if (content.image == "") {
-            setFilledIn({ ...filledIn, image: false });
-        }
-    };
     const selectImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -123,43 +110,61 @@ export default function PostForm({ route, navigation }) {
             ...content,
             image: uploadUri
         });
-        // console.log("uploadUri", uploadUri);
+    };
+
+    const checkBlanks = () => {
+        result = {};
+        if (content.title == "") {
+            result.title = false;
+        }
+        if (content.content == "") {
+            result.content = false;
+        }
+        if (content.deposit == "0") {
+            result.deposit = false;
+        }
+        if (content.pref_loan == "0") {
+            result.pref_loan = false;
+        }
+        if (content.price == "0") {
+            result.price = false;
+        }
+        if (content.image == "") {
+            result.image = false;
+        }
+        return result;
+    };
+
+    const test = () => {
+        result = checkBlanks();
+        setIsFilledIn({ ...isFilledIn, ...result });
     };
 
     const savePost = async () => {
-        checkBlanks();
-        console.log(Object.values(filledIn));
-        const values = Object.values(filledIn);
-        if (values.includes(false)) {
-            setConfirmed(false);
-        } else {
-            try {
-                if (route.params.key) {
-                    const id = route.params.key;
-                    // console.log(content);
-                    updateDoc(doc(firestore, "posts", id), {
-                        ...content,
-                        price: parseInt(content.price),
-                        deposit: parseInt(content.deposit),
-                        pref_loan: parseInt(content.pref_loan)
-                    }).then(() => {
-                        navigation.navigate("PostDetail", { key: id });
-                        DeviceEventEmitter.emit("toDetail");
-                    });
-                } else {
-                    // console.log(content);
-                    addDoc(collection(firestore, "posts"), {
-                        ...content,
-                        price: parseInt(content.price),
-                        deposit: parseInt(content.deposit),
-                        pref_loan: parseInt(content.pref_loan)
-                    }).then((docRef) => {
-                        navigation.navigate("PostDetail", { key: docRef.id });
-                    });
-                }
-            } catch (error) {
-                console.log(error.message);
+        try {
+            if (route.params.key) {
+                const id = route.params.key;
+                updateDoc(doc(firestore, "posts", id), {
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
+                }).then(() => {
+                    navigation.navigate("PostDetail", { key: id });
+                    DeviceEventEmitter.emit("toDetail");
+                });
+            } else {
+                addDoc(collection(firestore, "posts"), {
+                    ...content,
+                    price: parseInt(content.price),
+                    deposit: parseInt(content.deposit),
+                    pref_loan: parseInt(content.pref_loan)
+                }).then((docRef) => {
+                    navigation.navigate("PostDetail", { key: docRef.id });
+                });
             }
+        } catch (error) {
+            console.log(error.message);
         }
     };
 
@@ -172,9 +177,9 @@ export default function PostForm({ route, navigation }) {
                     onBlur={() =>
                         setContent({ ...content, title: content.title })
                     }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, title: payload })
-                    }
+                    onChangeText={(payload) => {
+                        setContent({ ...content, title: payload });
+                    }}
                     value={content.title}
                 ></TextInput>
             </View>
@@ -207,7 +212,7 @@ export default function PostForm({ route, navigation }) {
             </View>
             <View style={styles.itemContainer}>
                 <Text>타입 : </Text>
-                <RNPickerSelect
+                {/* <RNPickerSelect
                     placeholder={{ label: content.type, value: content.type }}
                     value={content.type}
                     onValueChange={(payload) =>
@@ -222,7 +227,7 @@ export default function PostForm({ route, navigation }) {
                         { label: "나눔해요", value: "나눔해요" },
                         { label: "판매해요", value: "판매해요" }
                     ]}
-                />
+                /> */}
             </View>
 
             {content.type == "빌려요" || content.type == "빌려드려요" ? (
@@ -293,7 +298,8 @@ export default function PostForm({ route, navigation }) {
             <Button
                 title="저장"
                 style={styles.button}
-                onPress={() => savePost()}
+                // onPress={checkBlanks}
+                onPress={test}
             ></Button>
             {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>

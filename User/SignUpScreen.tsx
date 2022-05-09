@@ -165,18 +165,6 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         setTownLocation(json.regcodes);
     };
 
-    const renderCity = async () => {
-        cityLocations.map((item) => {
-            return <Picker.Item label={item.name} value={item.code} />;
-        });
-    };
-
-    const renderTown = () => {
-        townLocations.map((item) => {
-            return <Picker.Item label={item.name} value={item.code} />;
-        });
-    };
-
     return (
         <View style={styles.container}>
             <Text>Signup screen!</Text>
@@ -243,6 +231,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                 <Picker.Item
                                     label={item.name}
                                     value={item.code}
+                                    key={item.code}
                                 />
                             );
                         })}
@@ -271,6 +260,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                                     <Picker.Item
                                         label={str.slice(4)}
                                         value={item.code}
+                                        key={item.code}
                                     />
                                 );
                             } else if (parseInt(item.code) <= 4800000000) {

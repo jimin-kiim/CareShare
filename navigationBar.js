@@ -14,7 +14,6 @@ export default function NavigationBar({
     myPage,
     navigation,
 }) {
-    console.log(home);
     return (
         <View style={styles.naviationBar}>
             <TouchableOpacity
@@ -98,6 +97,9 @@ export default function NavigationBar({
                         myPage
                             ? { color: theme.textDark }
                             : { color: theme.iconGray }
+                    }
+                    onPress={() =>
+                        navigation.navigate("MyPage", { navigation })
                     }
                 >
                     마이페이지
