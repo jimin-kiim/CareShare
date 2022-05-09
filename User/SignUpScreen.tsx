@@ -32,6 +32,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         address_city: undefined,
         address_town: undefined,
         error: "",
+        care_index: 0,
     });
     const [cityLocations, setCityLocation] = React.useState([]);
     const [townLocations, setTownLocation] = React.useState([]);
@@ -62,19 +63,11 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         displayName: userValue.id,
                         photoURL: "./components/default.png",
                     });
-                    console.log(userData.user.displayName);
-                    addDoc(
-                        collection(
-                            firestore,
-                            "users",
-                            userData.user.uid,
-                            "address"
-                        ),
-                        {
-                            city: userValue.address_city,
-                            town: userValue.address_town,
-                        }
-                    );
+                    setDoc(doc(firestore, "users", userData.user.uid), {
+                        city: userValue.address_city,
+                        town: userValue.address_town,
+                        careIndex: userValue.care_index,
+                    });
                 })
                 .then(() => {
                     sendEmailVerification(auth.currentUser);
