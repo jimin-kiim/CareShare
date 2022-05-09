@@ -65,6 +65,14 @@ export default function PostForm({ route, navigation }) {
         };
     }, []);
 
+    useEffect(() => {
+        if (Object.keys(isFilledIn).every((v) => v)) {
+            savePost();
+        } else {
+            setConfirmed(false);
+        }
+    }, [isFilledIn]);
+
     const loadPost = async (id) => {
         try {
             const docRef = doc(firestore, "posts", id);
@@ -105,67 +113,37 @@ export default function PostForm({ route, navigation }) {
     };
 
     const checkBlanks = () => {
-        // console.log(content);
+        result = {};
         if (content.title == "") {
-            console.log("들어옴");
-
-            // setIsFilledIn({ ...isFilledIn, title: false });
-            setIsFilledIn((isFilledIn) => {
-                // console.log("들어옴");
-                // console.log(isFilledIn);
-                return { ...isFilledIn, title: false };
-            });
-            const values = Object.values(isFilledIn);
-            console.log(values);
-            // var newFilled = [...isFilledIn];
-            // newFilled[0] = false;
-            // setIsFilledIn(newFilled);
-            // console.log("false");
-            // const values = Object.values(isFilledIn);
-            // console.log(values);
+            result.title = false;
         }
         if (content.content == "") {
-            // setIsFilledIn({ ...isFilledIn, content: false });
+            result.content = false;
         }
         if (content.deposit == "0") {
-            // setIsFilledIn({ ...isFilledIn, deposit: false });
+            result.deposit = false;
         }
         if (content.pref_loan == "0") {
-            // setIsFilledIn({ ...isFilledIn, pref_loan: false });
+            result.pref_loan = false;
         }
         if (content.price == "0") {
-            // setIsFilledIn({ ...isFilledIn, price: false });
+            result.price = false;
         }
         if (content.image == "") {
-            // setIsFilledIn({ ...isFilledIn, image: false });
+            result.image = false;
         }
-        const values = Object.values(isFilledIn);
-        console.log(values);
+        return result;
     };
 
     const test = () => {
-        const values = Object.values(isFilledIn);
-        console.log(values);
-        // const values = Object.values(isFilledIn);
-        console.log(isFilledIn);
-        if (values.includes(false)) {
-            setConfirmed(false);
-        } else {
-            console.log(content);
-            savePost();
-        }
+        result = checkBlanks();
+        setIsFilledIn({ ...isFilledIn, ...result });
     };
+
     const savePost = async () => {
-        // checkBlanks();
-        // const values = Object.values(isFilledIn);
-        // console.log(values);
-        // if (values.includes(false)) {
-        //     setConfirmed(false);
-        // } else {
         try {
             if (route.params.key) {
                 const id = route.params.key;
-                // console.log(content);
                 updateDoc(doc(firestore, "posts", id), {
                     ...content,
                     price: parseInt(content.price),
@@ -176,7 +154,6 @@ export default function PostForm({ route, navigation }) {
                     DeviceEventEmitter.emit("toDetail");
                 });
             } else {
-                // console.log(content);
                 addDoc(collection(firestore, "posts"), {
                     ...content,
                     price: parseInt(content.price),
@@ -189,7 +166,6 @@ export default function PostForm({ route, navigation }) {
         } catch (error) {
             console.log(error.message);
         }
-        // }
     };
 
     return (
@@ -322,22 +298,8 @@ export default function PostForm({ route, navigation }) {
             <Button
                 title="저장"
                 style={styles.button}
-                onPress={checkBlanks}
-                // onPress={() => {
-                //     // event.preventDefault();
-                //     checkBlanks(){
-
-                //     };
-                //     // setIsFilledIn((isFilledIn) => {
-                //     //     console.log("들어옴");
-                //     //     console.log(isFilledIn);
-                //     //     return { ...isFilledIn, title: false };
-                //     // });
-                //     // test();
-                //     // const values = Object.values(isFilledIn);
-                //     // console.log(values);
-                //     // savePost();
-                // }}
+                // onPress={checkBlanks}
+                onPress={test}
             ></Button>
             {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
