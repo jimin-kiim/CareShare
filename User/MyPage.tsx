@@ -5,6 +5,7 @@ import { theme } from "../colors";
 import { getAuth } from "firebase/auth";
 import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { getDocs, collection, getFirestore } from "firebase/firestore";
+import * as Progress from "react-native-progress";
 
 const auth = getAuth();
 
@@ -78,9 +79,110 @@ const MyPage = ({ navigation }) => {
                     </View>
                     <View style={styles.shadowBox}>
                         <Text>케어지수</Text>
-                        <Text style={{ paddingLeft: 10, paddingTop: 12 }}>
+                        <Text>
                             {userData.map((item) => {
-                                return <Text>{item.careIndex}</Text>;
+                                if (item.careIndex < 100) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade0,
+                                            ]}
+                                        >
+                                            <Text>0</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 200) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade1,
+                                            ]}
+                                        >
+                                            <Text>1</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 300) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade2,
+                                            ]}
+                                        >
+                                            <Text>2</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 400) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade3,
+                                            ]}
+                                        >
+                                            <Text>3</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 500) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade4,
+                                            ]}
+                                        >
+                                            <Text>4</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 600) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade5,
+                                            ]}
+                                        >
+                                            <Text>5</Text>
+                                        </View>
+                                    );
+                                } else if (item.careIndex < 700) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade6,
+                                            ]}
+                                        >
+                                            <Text>6</Text>
+                                        </View>
+                                    );
+                                } else if (700 <= item.careIndex) {
+                                    return (
+                                        <View
+                                            style={[
+                                                styles.circle,
+                                                styles.careGrade7,
+                                            ]}
+                                        >
+                                            <Text>7</Text>
+                                        </View>
+                                    );
+                                }
+                            })}
+                        </Text>
+                        <Text>
+                            {userData.map((item) => {
+                                return (
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Text>{item.careIndex} % </Text>
+                                        <Progress.Bar
+                                            progress={item.careIndex / 100}
+                                            width={200}
+                                        />
+                                    </View>
+                                );
                             })}
                         </Text>
                     </View>
@@ -136,15 +238,50 @@ const styles = StyleSheet.create({
         marginHorizontal: 30,
         marginVertical: 20,
         padding: 20,
-        shadowColor: "#000",
+        shadowColor: "#E8E8E8",
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-
+        flexDirection: "row",
         elevation: 5,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    circle: {
+        borderRadius: 50,
+        width: 35,
+        height: 35,
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        margin: 10,
+    },
+    careGrade0: {
+        backgroundColor: "#D5C8DB",
+    },
+    careGrade1: {
+        backgroundColor: "#7E51FF",
+    },
+    careGrade2: {
+        backgroundColor: "#5182FF",
+    },
+    careGrade3: {
+        backgroundColor: "#75F3A7",
+    },
+    careGrade4: {
+        backgroundColor: "#E4F963",
+    },
+    careGrade5: {
+        backgroundColor: "#FFD951",
+    },
+    careGrade6: {
+        backgroundColor: "#FFA451",
+    },
+    careGrade7: {
+        backgroundColor: "#FF7051",
     },
 });
 
