@@ -9,7 +9,7 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     updateProfile,
-    sendEmailVerification
+    sendEmailVerification,
 } from "firebase/auth";
 import {
     getFirestore,
@@ -17,7 +17,7 @@ import {
     addDoc,
     setDoc,
     doc,
-    updateDoc
+    updateDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
 
@@ -47,7 +47,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         if (userValue.email === "" || userValue.password === "") {
             setUserValue({
                 ...userValue,
-                error: "Email and password are mandatory."
+                error: "Email and password are mandatory.",
             });
             return;
         }
@@ -61,7 +61,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 .then((userData) => {
                     updateProfile(userData.user, {
                         displayName: userValue.id,
-                        photoURL: "./components/default.png"
+                        photoURL: "",
                     });
                     setDoc(doc(firestore, "users", userData.user.uid), {
                         city: userValue.address_city,
@@ -75,7 +75,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         } catch (error) {
             setUserValue({
                 ...userValue,
-                error: error.message
+                error: error.message,
             });
         }
     }
@@ -213,7 +213,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         onValueChange={(itemValue, itemIndex) => {
                             setUserValue({
                                 ...userValue,
-                                address_city: itemValue
+                                address_city: itemValue,
                             });
                             setCity(itemValue);
                         }}
@@ -234,7 +234,7 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                         onValueChange={(itemValue, itemIndex) => {
                             setUserValue({
                                 ...userValue,
-                                address_town: itemValue
+                                address_town: itemValue,
                             });
                         }}
                     >
@@ -291,24 +291,24 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         backgroundColor: "#fff",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
 
     controls: {
-        flex: 1
+        flex: 1,
     },
 
     control: {
         marginTop: 10,
-        width: 300
+        width: 300,
     },
 
     error: {
         marginTop: 10,
         padding: 10,
         color: "#fff",
-        backgroundColor: "#D54826FF"
-    }
+        backgroundColor: "#D54826FF",
+    },
 });
 
 export default SignUpScreen;

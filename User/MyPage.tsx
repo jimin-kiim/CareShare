@@ -28,6 +28,7 @@ const MyPage = ({ navigation }) => {
 
     React.useEffect(() => {
         getAddress();
+        console.log(user.photoURL);
     }, [userData]);
 
     const loadUserData = async () => {
@@ -58,16 +59,22 @@ const MyPage = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {user ? (
-                <SafeAreaView>
+                <View>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                         <View style={styles.header}>
                             <Text style={styles.headerText}>마이페이지</Text>
                         </View>
                         <View style={styles.profile}>
                             <View style={styles.profileImage}>
-                                <Image
-                                    source={require("../assets/defaultProfile.png")}
-                                />
+                                {user.photoURL !== "" ? (
+                                    <Image
+                                        source={require(`./components/default.png`)}
+                                    />
+                                ) : (
+                                    <Image
+                                        source={require("./components/default.png")}
+                                    />
+                                )}
                             </View>
                             <Text
                                 style={{
@@ -201,28 +208,28 @@ const MyPage = ({ navigation }) => {
                             <View style={styles.menuItem}>
                                 <Image
                                     style={styles.menuImage}
-                                    source={require("../assets/money.png")}
+                                    source={require("./components/money.png")}
                                 />
                                 <Text>거래 내역</Text>
                             </View>
                             <View style={styles.menuItem}>
                                 <Image
                                     style={styles.menuImage}
-                                    source={require("../assets/borrow.png")}
+                                    source={require("./components/borrow.png")}
                                 />
                                 <Text>빌린 내역</Text>
                             </View>
                             <View style={styles.menuItem}>
                                 <Image
                                     style={styles.menuImage}
-                                    source={require("../assets/lent.png")}
+                                    source={require("./components/lent.png")}
                                 />
                                 <Text>빌려준 내역</Text>
                             </View>
                             <View style={styles.menuItem}>
                                 <Image
                                     style={styles.menuImage}
-                                    source={require("../assets/heart.png")}
+                                    source={require("./components/heart.png")}
                                 />
                                 <Text>찜 목록</Text>
                             </View>
@@ -231,7 +238,14 @@ const MyPage = ({ navigation }) => {
                             <Text style={{ paddingBottom: 20, color: "grey" }}>
                                 서비스 설정
                             </Text>
-                            <Text style={{ paddingBottom: 15 }}>
+                            <Text
+                                style={{ paddingBottom: 15 }}
+                                onPress={() =>
+                                    navigation.navigate("ProfileSetting", {
+                                        navigation,
+                                    })
+                                }
+                            >
                                 프로필 수정
                             </Text>
                             <Text style={{ paddingBottom: 15 }}>앱 설정</Text>
@@ -257,7 +271,7 @@ const MyPage = ({ navigation }) => {
                         myPage={true}
                         navigation={navigation}
                     />
-                </SafeAreaView>
+                </View>
             ) : (
                 <Text>user is undefined</Text>
             )}

@@ -6,6 +6,7 @@ import Home from "../Home/Home";
 import PostForm from "../Home/PostForm";
 import PostDetail from "../Home/PostDetail";
 import MyPage from "../User/MyPage";
+import ProfileSetting from "../User/ProfileSetting";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,10 @@ export default function UserStack() {
                 <Stack.Screen name="PostDetail" component={PostDetail} />
                 <Stack.Screen name="PostForm" component={PostForm} />
                 <Stack.Screen name="MyPage" component={MyPage} />
+                <Stack.Screen
+                    name="ProfileSetting"
+                    component={ProfileSetting}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
