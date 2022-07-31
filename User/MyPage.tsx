@@ -28,7 +28,6 @@ const MyPage = ({ navigation }) => {
 
     React.useEffect(() => {
         getAddress();
-        console.log(user.photoURL);
     }, [userData]);
 
     const loadUserData = async () => {
@@ -66,9 +65,9 @@ const MyPage = ({ navigation }) => {
                         </View>
                         <View style={styles.profile}>
                             <View style={styles.profileImage}>
-                                {user.photoURL !== "" ? (
+                                {user.photoURL ? (
                                     <Image
-                                        source={require(`./components/default.png`)}
+                                        source={require("./components/heart.png")}
                                     />
                                 ) : (
                                     <Image
