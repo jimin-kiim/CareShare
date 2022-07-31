@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
-// import RNPickerSelect from "react-native-picker-select";
+
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
     const date = new Date().getTime();
@@ -65,13 +65,13 @@ export default function PostForm({ route, navigation }) {
         };
     }, []);
 
-    useEffect(() => {
-        if (Object.keys(isFilledIn).every((v) => v)) {
-            savePost();
-        } else {
-            setConfirmed(false);
-        }
-    }, [isFilledIn]);
+    // useEffect(() => {
+    //     if (Object.keys(isFilledIn).every((v) => v)) {
+    //         savePost();
+    //     } else {
+    //         setConfirmed(false);
+    //     }
+    // }, [isFilledIn]);
 
     const loadPost = async (id) => {
         try {
@@ -132,6 +132,7 @@ export default function PostForm({ route, navigation }) {
         if (content.image == "") {
             result.image = false;
         }
+        savePost();
         return result;
     };
 
@@ -171,7 +172,10 @@ export default function PostForm({ route, navigation }) {
     return (
         <View style={styles.formContainer}>
             <View style={styles.itemContainer}>
-                <Text>제목 : </Text>
+                <Text style={styles.pageTitle}>새 글 쓰기 </Text>
+            </View>
+            <View style={styles.itemContainer}>
+                <Text style={styles.itemTitle}>제목</Text>
                 <TextInput
                     style={styles.textInput}
                     onBlur={() =>
@@ -184,7 +188,7 @@ export default function PostForm({ route, navigation }) {
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
-                <Text>내용 : </Text>
+                <Text style={styles.itemTitle}>내용</Text>
                 <TextInput
                     style={styles.textInput}
                     onBlur={() =>
@@ -198,7 +202,7 @@ export default function PostForm({ route, navigation }) {
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
-                <Text>주소 : </Text>
+                <Text style={styles.itemTitle}>주소</Text>
                 <TextInput
                     style={styles.textInput}
                     onBlur={() =>
@@ -211,7 +215,7 @@ export default function PostForm({ route, navigation }) {
                 ></TextInput>
             </View>
             <View style={styles.itemContainer}>
-                <Text>타입 : </Text>
+                <Text style={styles.itemTitle}>타입</Text>
                 {/* <RNPickerSelect
                     placeholder={{ label: content.type, value: content.type }}
                     value={content.type}
@@ -232,7 +236,7 @@ export default function PostForm({ route, navigation }) {
 
             {content.type == "빌려요" || content.type == "빌려드려요" ? (
                 <View style={styles.itemContainer}>
-                    <Text>희망 대여금 : </Text>
+                    <Text style={styles.itemTitle}>희망 대여금</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
@@ -246,12 +250,13 @@ export default function PostForm({ route, navigation }) {
                         }
                         value={content.pref_loan}
                     ></TextInput>
+                    <Text>원</Text>
                 </View>
             ) : null}
 
             {content.type == "판매해요" ? (
                 <View style={styles.itemContainer}>
-                    <Text>가격 : </Text>
+                    <Text style={styles.itemTitle}>가격</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
@@ -262,11 +267,12 @@ export default function PostForm({ route, navigation }) {
                         }
                         value={content.price}
                     ></TextInput>
+                    <Text>원</Text>
                 </View>
             ) : null}
             {content.type == "빌려드려요" || content.type == "판매해요" ? (
                 <View style={styles.itemContainer}>
-                    <Text>보증금 : </Text>
+                    <Text style={styles.itemTitle}>보증금</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
@@ -277,29 +283,33 @@ export default function PostForm({ route, navigation }) {
                         }
                         value={content.deposit}
                     ></TextInput>
+                    <Text>원</Text>
                 </View>
             ) : null}
 
-            <TouchableOpacity onPress={selectImage}>
-                <Text>사진 업로드하기</Text>
-            </TouchableOpacity>
-            <View>
-                {content.image ? (
-                    <Image
-                        source={{ uri: content.image }}
-                        style={{
-                            width: 120,
-                            height: 120
-                        }}
-                    />
-                ) : null}
+            <View style={styles.photoSelector}>
+                <TouchableOpacity onPress={selectImage}>
+                    <Text style={styles.photoSelectorTitle}>
+                        사진 업로드하기
+                    </Text>
+                </TouchableOpacity>
+                <View>
+                    {content.image ? (
+                        <Image
+                            source={{ uri: content.image }}
+                            style={{
+                                width: 120,
+                                height: 120
+                            }}
+                        />
+                    ) : null}
+                </View>
             </View>
-
             <Button
                 title="저장"
                 style={styles.button}
-                // onPress={checkBlanks}
-                onPress={test}
+                onPress={checkBlanks}
+                // onPress={test}
             ></Button>
             {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
         </View>
@@ -307,22 +317,56 @@ export default function PostForm({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    pageTitle: {
+        fontSize: 25,
+        color: theme.textDark,
+        fontWeight: "700"
+    },
     formContainer: {
         marginTop: 30
     },
     itemContainer: {
         flexDirection: "row",
         paddingHorizontal: 20,
-        paddingTop: 20
+        paddingTop: 20,
+        // justifyContent: "center"
+        alignItems: "center"
+    },
+    itemTitle: {
+        fontWeight: "600"
     },
     textInput: {
         borderColor: theme.textDark,
-        borderRadius: 15,
+        marginLeft: 20,
+        marginRight: 10,
+        borderRadius: 10,
         borderWidth: 1,
-        flex: 1
+        height: 25,
+        flex: 1,
+        paddingLeft: 10
+    },
+    photoSelectorTitle: {
+        // paddingTop: 20,
+        fontWeight: "500",
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        marginBottom: 10,
+        borderWidth: 2,
+        borderRadius: 18,
+        borderColor: theme.yellow
+    },
+    photoSelector: {
+        // flexDirection: "row",
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        // justifyContent: "center"
+        alignItems: "center"
     },
     button: {
+        marginTop: 10,
         marginHorizontal: 30,
-        borderRadius: 15
+        borderWidth: 1,
+        borderRadius: 15,
+        borderColor: theme.iconDarkGray
     }
 });
