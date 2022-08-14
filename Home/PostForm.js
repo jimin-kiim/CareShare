@@ -92,12 +92,7 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt
             });
-            console.log(
-                "content",
-                content.deposit,
-                content.price,
-                content.pref_loan
-            );
+            console.log("content", content.deposit);
         } catch (error) {
             console.log(error.message);
         }
@@ -181,7 +176,6 @@ export default function PostForm({ route, navigation }) {
         <View style={styles.formContainer}>
             <View style={styles.itemContainer}>
                 <Text style={styles.pageTitle}>
-                    {" "}
                     {route.params.key ? "글 수정하기" : "새 글 쓰기"}
                 </Text>
             </View>
@@ -300,7 +294,9 @@ export default function PostForm({ route, navigation }) {
                 <View style={styles.photoSelector}>
                     <TouchableOpacity onPress={selectImage}>
                         <Text style={styles.photoSelectorTitle}>
-                            사진 업로드하기
+                            {route.params.key
+                                ? "사진 변경하기"
+                                : "사진 업로드하기"}
                         </Text>
                     </TouchableOpacity>
                     <View>
