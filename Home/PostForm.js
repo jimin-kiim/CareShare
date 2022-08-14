@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
+import { Picker } from "@react-native-picker/picker";
 
 const auth = getAuth();
 export default function PostForm({ route, navigation }) {
@@ -216,23 +217,18 @@ export default function PostForm({ route, navigation }) {
             </View>
             <View style={styles.itemContainer}>
                 <Text style={styles.itemTitle}>타입</Text>
-                {/* <RNPickerSelect
-                    placeholder={{ label: content.type, value: content.type }}
-                    value={content.type}
-                    onValueChange={(payload) =>
-                        setContent({ ...content, type: payload })
-                    }
-                    onClose={() =>
-                        setContent({ ...content, type: content.type })
-                    }
-                    items={[
-                        { label: "빌려드려요", value: "빌려드려요" },
-                        { label: "빌려요", value: "빌려요" },
-                        { label: "나눔해요", value: "나눔해요" },
-                        { label: "판매해요", value: "판매해요" }
-                    ]}
-                /> */}
             </View>
+            <Picker
+                selectedValue={content.type}
+                onValueChange={(payload) =>
+                    setContent({ ...content, type: payload })
+                }
+            >
+                <Picker.Item label="빌려드려요" value="빌려드려요" />
+                <Picker.Item label="빌려요" value="빌려요" />
+                <Picker.Item label="나눔해요" value="나눔해요" />
+                <Picker.Item label="판매해요" value="판매해요" />
+            </Picker>
 
             {content.type == "빌려요" || content.type == "빌려드려요" ? (
                 <View style={styles.itemContainer}>
