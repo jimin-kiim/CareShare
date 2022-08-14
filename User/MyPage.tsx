@@ -21,12 +21,14 @@ const MyPage = ({ navigation }) => {
     const firestore = getFirestore();
     const [userData, setUserData] = React.useState([]);
     const [userLocation, setUserLocation] = React.useState();
+    const [userImage, setUserImage] = React.useState();
 
     React.useEffect(() => {
         loadUserData();
     }, [user]);
 
     React.useEffect(() => {
+        console.log(userData);
         getAddress();
     }, [userData]);
 
@@ -58,22 +60,28 @@ const MyPage = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {user ? (
-                <View>
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>마이페이지</Text>
+                    </View>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                        <View style={styles.header}>
-                            <Text style={styles.headerText}>마이페이지</Text>
-                        </View>
                         <View style={styles.profile}>
                             <View style={styles.profileImage}>
-                                {user.photoURL ? (
-                                    <Image
-                                        source={require("./components/heart.png")}
-                                    />
-                                ) : (
-                                    <Image
-                                        source={require("./components/default.png")}
-                                    />
-                                )}
+                                {userData.map((item) => {
+                                    if (item.image === "") {
+                                        return (
+                                            <Image
+                                                source={require("./components/default.png")}
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <Image
+                                                source={{ uri: item.image }}
+                                            />
+                                        );
+                                    }
+                                })}
                             </View>
                             <Text
                                 style={{

@@ -61,12 +61,12 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
                 .then((userData) => {
                     updateProfile(userData.user, {
                         displayName: userValue.id,
-                        photoURL: "",
                     });
                     setDoc(doc(firestore, "users", userData.user.uid), {
                         city: userValue.address_city,
                         town: userValue.address_town,
                         careIndex: userValue.care_index,
+                        image: "",
                     });
                 })
                 .then(() => {
