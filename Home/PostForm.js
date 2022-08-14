@@ -92,6 +92,12 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt
             });
+            console.log(
+                "content",
+                content.deposit,
+                content.price,
+                content.pref_loan
+            );
         } catch (error) {
             console.log(error.message);
         }
@@ -174,7 +180,10 @@ export default function PostForm({ route, navigation }) {
     return (
         <View style={styles.formContainer}>
             <View style={styles.itemContainer}>
-                <Text style={styles.pageTitle}>새 글 쓰기 </Text>
+                <Text style={styles.pageTitle}>
+                    {" "}
+                    {route.params.key ? "글 수정하기" : "새 글 쓰기"}
+                </Text>
             </View>
             <ScrollView>
                 <View style={styles.itemContainer}>
