@@ -9,6 +9,7 @@ import {
     Button,
     DeviceEventEmitter,
     Image,
+    ScrollView,
     Platform
 } from "react-native";
 import {
@@ -175,139 +176,144 @@ export default function PostForm({ route, navigation }) {
             <View style={styles.itemContainer}>
                 <Text style={styles.pageTitle}>새 글 쓰기 </Text>
             </View>
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>제목</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onBlur={() =>
-                        setContent({ ...content, title: content.title })
-                    }
-                    onChangeText={(payload) => {
-                        setContent({ ...content, title: payload });
-                    }}
-                    value={content.title}
-                ></TextInput>
-            </View>
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>내용</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onBlur={() =>
-                        setContent({ ...content, content: content.content })
-                    }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, content: payload })
-                    }
-                    value={content.content}
-                    multiline={true}
-                ></TextInput>
-            </View>
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>주소</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onBlur={() =>
-                        setContent({ ...content, address: content.address })
-                    }
-                    onChangeText={(payload) =>
-                        setContent({ ...content, address: payload })
-                    }
-                    value={content.address}
-                ></TextInput>
-            </View>
-            <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>타입</Text>
-            </View>
-            <Picker
-                selectedValue={content.type}
-                onValueChange={(payload) =>
-                    setContent({ ...content, type: payload })
-                }
-            >
-                <Picker.Item label="빌려드려요" value="빌려드려요" />
-                <Picker.Item label="빌려요" value="빌려요" />
-                <Picker.Item label="나눔해요" value="나눔해요" />
-                <Picker.Item label="판매해요" value="판매해요" />
-            </Picker>
-
-            {content.type == "빌려요" || content.type == "빌려드려요" ? (
+            <ScrollView>
                 <View style={styles.itemContainer}>
-                    <Text style={styles.itemTitle}>희망 대여금</Text>
+                    <Text style={styles.itemTitle}>제목</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
-                            setContent({
-                                ...content,
-                                pref_loan: content.pref_loan
-                            })
+                            setContent({ ...content, title: content.title })
                         }
-                        onChangeText={(payload) =>
-                            setContent({ ...content, pref_loan: payload })
-                        }
-                        value={content.pref_loan}
+                        onChangeText={(payload) => {
+                            setContent({ ...content, title: payload });
+                        }}
+                        value={content.title}
                     ></TextInput>
-                    <Text>원</Text>
                 </View>
-            ) : null}
-
-            {content.type == "판매해요" ? (
                 <View style={styles.itemContainer}>
-                    <Text style={styles.itemTitle}>가격</Text>
+                    <Text style={styles.itemTitle}>내용</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
-                            setContent({ ...content, price: content.price })
+                            setContent({ ...content, content: content.content })
                         }
                         onChangeText={(payload) =>
-                            setContent({ ...content, price: payload })
+                            setContent({ ...content, content: payload })
                         }
-                        value={content.price}
+                        value={content.content}
+                        multiline={true}
                     ></TextInput>
-                    <Text>원</Text>
                 </View>
-            ) : null}
-            {content.type == "빌려드려요" || content.type == "판매해요" ? (
                 <View style={styles.itemContainer}>
-                    <Text style={styles.itemTitle}>보증금</Text>
+                    <Text style={styles.itemTitle}>주소</Text>
                     <TextInput
                         style={styles.textInput}
                         onBlur={() =>
-                            setContent({ ...content, deposit: content.deposit })
+                            setContent({ ...content, address: content.address })
                         }
                         onChangeText={(payload) =>
-                            setContent({ ...content, deposit: payload })
+                            setContent({ ...content, address: payload })
                         }
-                        value={content.deposit}
+                        value={content.address}
                     ></TextInput>
-                    <Text>원</Text>
                 </View>
-            ) : null}
+                <View style={styles.itemContainer}>
+                    <Text style={styles.itemTitle}>타입</Text>
+                </View>
+                <Picker
+                    selectedValue={content.type}
+                    onValueChange={(payload) =>
+                        setContent({ ...content, type: payload })
+                    }
+                >
+                    <Picker.Item label="빌려드려요" value="빌려드려요" />
+                    <Picker.Item label="빌려요" value="빌려요" />
+                    <Picker.Item label="나눔해요" value="나눔해요" />
+                    <Picker.Item label="판매해요" value="판매해요" />
+                </Picker>
 
-            <View style={styles.photoSelector}>
-                <TouchableOpacity onPress={selectImage}>
-                    <Text style={styles.photoSelectorTitle}>
-                        사진 업로드하기
-                    </Text>
-                </TouchableOpacity>
-                <View>
-                    {content.image ? (
-                        <Image
-                            source={{ uri: content.image }}
-                            style={{
-                                width: 120,
-                                height: 120
-                            }}
-                        />
-                    ) : null}
+                {content.type == "빌려요" || content.type == "빌려드려요" ? (
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemTitle}>희망 대여금</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={() =>
+                                setContent({
+                                    ...content,
+                                    pref_loan: content.pref_loan
+                                })
+                            }
+                            onChangeText={(payload) =>
+                                setContent({ ...content, pref_loan: payload })
+                            }
+                            value={content.pref_loan}
+                        ></TextInput>
+                        <Text>원</Text>
+                    </View>
+                ) : null}
+
+                {content.type == "판매해요" ? (
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemTitle}>가격</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={() =>
+                                setContent({ ...content, price: content.price })
+                            }
+                            onChangeText={(payload) =>
+                                setContent({ ...content, price: payload })
+                            }
+                            value={content.price}
+                        ></TextInput>
+                        <Text>원</Text>
+                    </View>
+                ) : null}
+                {content.type == "빌려드려요" || content.type == "판매해요" ? (
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemTitle}>보증금</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={() =>
+                                setContent({
+                                    ...content,
+                                    deposit: content.deposit
+                                })
+                            }
+                            onChangeText={(payload) =>
+                                setContent({ ...content, deposit: payload })
+                            }
+                            value={content.deposit}
+                        ></TextInput>
+                        <Text>원</Text>
+                    </View>
+                ) : null}
+
+                <View style={styles.photoSelector}>
+                    <TouchableOpacity onPress={selectImage}>
+                        <Text style={styles.photoSelectorTitle}>
+                            사진 업로드하기
+                        </Text>
+                    </TouchableOpacity>
+                    <View>
+                        {content.image ? (
+                            <Image
+                                source={{ uri: content.image }}
+                                style={{
+                                    width: 120,
+                                    height: 120
+                                }}
+                            />
+                        ) : null}
+                    </View>
                 </View>
-            </View>
-            <Button
-                title="저장"
-                style={styles.button}
-                onPress={checkBlanks}
-                // onPress={test}
-            ></Button>
-            {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
+                <Button
+                    title="저장"
+                    style={styles.button}
+                    onPress={checkBlanks}
+                    // onPress={test}
+                ></Button>
+                {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
+            </ScrollView>
         </View>
     );
 }
