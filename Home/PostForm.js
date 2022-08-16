@@ -196,7 +196,7 @@ export default function PostForm({ route, navigation }) {
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>내용</Text>
                     <TextInput
-                        style={styles.textInput}
+                        style={styles.textFieldInput}
                         onBlur={() =>
                             setContent({ ...content, content: content.content })
                         }
@@ -349,6 +349,16 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         height: 25,
+        flex: 1,
+        paddingLeft: 10
+    },
+    textFieldInput: {
+        borderColor: theme.textDark,
+        marginLeft: 20,
+        marginRight: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        height: 100,
         flex: 1,
         paddingLeft: 10
     },
