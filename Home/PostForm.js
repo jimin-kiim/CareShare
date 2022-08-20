@@ -92,7 +92,13 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt
             });
-            console.log("content", content.deposit);
+            console.log(
+                "content.deposit",
+                content.deposit,
+                post.deposit,
+                "content.price",
+                content.price
+            );
         } catch (error) {
             console.log(error.message);
         }
@@ -249,7 +255,7 @@ export default function PostForm({ route, navigation }) {
                             onChangeText={(payload) =>
                                 setContent({ ...content, pref_loan: payload })
                             }
-                            value={content.pref_loan}
+                            value={`${content.pref_loan}`}
                         ></TextInput>
                         <Text>원</Text>
                     </View>
@@ -266,7 +272,7 @@ export default function PostForm({ route, navigation }) {
                             onChangeText={(payload) =>
                                 setContent({ ...content, price: payload })
                             }
-                            value={content.price}
+                            value={`${content.price}`}
                         ></TextInput>
                         <Text>원</Text>
                     </View>
@@ -285,7 +291,7 @@ export default function PostForm({ route, navigation }) {
                             onChangeText={(payload) =>
                                 setContent({ ...content, deposit: payload })
                             }
-                            value={content.deposit}
+                            value={`${content.deposit}`}
                         ></TextInput>
                         <Text>원</Text>
                     </View>
