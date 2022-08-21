@@ -21,7 +21,6 @@ const MyPage = ({ navigation }) => {
     const firestore = getFirestore();
     const [userData, setUserData] = React.useState([]);
     const [userLocation, setUserLocation] = React.useState();
-    const [userImage, setUserImage] = React.useState();
 
     React.useEffect(() => {
         loadUserData();

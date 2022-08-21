@@ -49,8 +49,8 @@ const ProfileSetting = ({ navigation }) => {
         getTowns(city);
     }, [city]);
 
-    React.useEffect(() => {
-        loadUserData();
+    React.useEffect(async () => {
+        await loadUserData();
         setUserValue({
             id: user.displayName,
             address_city: userData[0].city,
@@ -199,15 +199,19 @@ const ProfileSetting = ({ navigation }) => {
                     </View>
                     <View style={styles.content}>
                         <View style={styles.profileImage}>
-                            {userData.map((item) => item.image) ? (
-                                userData.map((item) => {
-                                    <Image source={{ uri: item.image }} />;
-                                })
-                            ) : (
-                                <Image
-                                    source={require("./components/default.png")}
-                                />
-                            )}
+                            {userData.map((item) => {
+                                if (item.image === "") {
+                                    return (
+                                        <Image
+                                            source={require("./components/default.png")}
+                                        />
+                                    );
+                                } else {
+                                    return (
+                                        <Image source={{ uri: item.image }} />
+                                    );
+                                }
+                            })}
                         </View>
                     </View>
                     <View style={styles.content}>
@@ -307,14 +311,6 @@ const ProfileSetting = ({ navigation }) => {
             ) : (
                 <Text>user is undefined</Text>
             )}
-            <NavigationBar
-                home={false}
-                info={false}
-                shopping={false}
-                chatting={false}
-                myPage={true}
-                navigation={navigation}
-            />
         </View>
     );
 };
@@ -345,7 +341,7 @@ const styles = StyleSheet.create({
         height: 200,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
+        marginTop: 50,
     },
     control: {
         marginTop: 10,
