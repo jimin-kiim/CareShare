@@ -1,10 +1,18 @@
 import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Text,
+    Image,
+    ScrollView,
+    SafeAreaView,
+} from "react-native";
 import NavigationBar from "../navigationBar";
 import { theme } from "../colors";
 import { getAuth } from "firebase/auth";
 import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { getDocs, collection, getFirestore } from "firebase/firestore";
+import * as Progress from "react-native-progress";
 
 const auth = getAuth();
 
@@ -16,8 +24,12 @@ const MyPage = ({ navigation }) => {
 
     React.useEffect(() => {
         loadUserData();
+    }, [user]);
+
+    React.useEffect(() => {
+        console.log(userData);
         getAddress();
-    }, []);
+    }, [userData]);
 
     const loadUserData = async () => {
         try {
@@ -47,43 +59,216 @@ const MyPage = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {user ? (
-                <View>
+                <View style={styles.container}>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>마이페이지</Text>
                     </View>
-                    <View style={styles.profile}>
-                        <View style={styles.profileImage}>
-                            <Image
-                                source={require("../assets/defaultProfile.png")}
-                            />
+                    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                        <View style={styles.profile}>
+                            <View style={styles.profileImage}>
+                                {userData.map((item) => {
+                                    if (item.image === "") {
+                                        return (
+                                            <Image
+                                                source={require("./components/default.png")}
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <Image
+                                                source={{ uri: item.image }}
+                                            />
+                                        );
+                                    }
+                                })}
+                            </View>
+                            <Text
+                                style={{
+                                    paddingLeft: 20,
+                                    paddingTop: 12,
+                                    fontSize: 25,
+                                }}
+                            >
+                                {user.displayName}
+                            </Text>
+                            <Text
+                                style={{
+                                    paddingLeft: 10,
+                                    paddingTop: 20,
+                                    color: "grey",
+                                }}
+                            >
+                                {userLocation}
+                            </Text>
                         </View>
-                        <Text
-                            style={{
-                                paddingLeft: 20,
-                                paddingTop: 12,
-                                fontSize: 25,
-                            }}
-                        >
-                            {user.displayName}
-                        </Text>
-                        <Text
-                            style={{
-                                paddingLeft: 10,
-                                paddingTop: 20,
-                                color: "grey",
-                            }}
-                        >
-                            {userLocation}
-                        </Text>
-                    </View>
-                    <View style={styles.shadowBox}>
-                        <Text>케어지수</Text>
-                        <Text style={{ paddingLeft: 10, paddingTop: 12 }}>
-                            {userData.map((item) => {
-                                return <Text>{item.careIndex}</Text>;
-                            })}
-                        </Text>
-                    </View>
+                        <View style={styles.shadowBox}>
+                            <Text>케어지수</Text>
+                            <Text>
+                                {userData.map((item) => {
+                                    if (item.careIndex < 100) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade0,
+                                                ]}
+                                            >
+                                                <Text>0</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 200) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade1,
+                                                ]}
+                                            >
+                                                <Text>1</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 300) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade2,
+                                                ]}
+                                            >
+                                                <Text>2</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 400) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade3,
+                                                ]}
+                                            >
+                                                <Text>3</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 500) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade4,
+                                                ]}
+                                            >
+                                                <Text>4</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 600) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade5,
+                                                ]}
+                                            >
+                                                <Text>5</Text>
+                                            </View>
+                                        );
+                                    } else if (item.careIndex < 700) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade6,
+                                                ]}
+                                            >
+                                                <Text>6</Text>
+                                            </View>
+                                        );
+                                    } else if (700 <= item.careIndex) {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.circle,
+                                                    styles.careGrade7,
+                                                ]}
+                                            >
+                                                <Text>7</Text>
+                                            </View>
+                                        );
+                                    }
+                                })}
+                            </Text>
+                            <Text>
+                                {userData.map((item) => {
+                                    return (
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Text>{item.careIndex} % </Text>
+                                            <Progress.Bar
+                                                progress={item.careIndex / 100}
+                                                width={200}
+                                            />
+                                        </View>
+                                    );
+                                })}
+                            </Text>
+                        </View>
+                        <View style={styles.menu}>
+                            <View style={styles.menuItem}>
+                                <Image
+                                    style={styles.menuImage}
+                                    source={require("./components/money.png")}
+                                />
+                                <Text>거래 내역</Text>
+                            </View>
+                            <View style={styles.menuItem}>
+                                <Image
+                                    style={styles.menuImage}
+                                    source={require("./components/borrow.png")}
+                                />
+                                <Text>빌린 내역</Text>
+                            </View>
+                            <View style={styles.menuItem}>
+                                <Image
+                                    style={styles.menuImage}
+                                    source={require("./components/lent.png")}
+                                />
+                                <Text>빌려준 내역</Text>
+                            </View>
+                            <View style={styles.menuItem}>
+                                <Image
+                                    style={styles.menuImage}
+                                    source={require("./components/heart.png")}
+                                />
+                                <Text>찜 목록</Text>
+                            </View>
+                        </View>
+                        <View style={styles.serviceSetting}>
+                            <Text style={{ paddingBottom: 20, color: "grey" }}>
+                                서비스 설정
+                            </Text>
+                            <Text
+                                style={{ paddingBottom: 15 }}
+                                onPress={() =>
+                                    navigation.navigate("ProfileSetting", {
+                                        navigation,
+                                    })
+                                }
+                            >
+                                프로필 수정
+                            </Text>
+                            <Text style={{ paddingBottom: 15 }}>앱 설정</Text>
+                        </View>
+                        <View style={styles.helpCenter}>
+                            <Text style={{ paddingBottom: 20, color: "grey" }}>
+                                고객센터
+                            </Text>
+                            <Text style={{ paddingBottom: 15 }}>공지사항</Text>
+                            <Text style={{ paddingBottom: 15 }}>
+                                자주 묻는 질문
+                            </Text>
+                            <Text style={{ paddingBottom: 15 }}>
+                                문의 및 건의 사항
+                            </Text>
+                        </View>
+                    </ScrollView>
                     <NavigationBar
                         home={false}
                         info={false}
@@ -136,15 +321,77 @@ const styles = StyleSheet.create({
         marginHorizontal: 30,
         marginVertical: 20,
         padding: 20,
-        shadowColor: "#000",
+        shadowColor: "black",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 3,
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
         elevation: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderColor: "white",
+    },
+    circle: {
+        borderRadius: 50,
+        width: 35,
+        height: 35,
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        margin: 10,
+    },
+    careGrade0: {
+        backgroundColor: "#D5C8DB",
+    },
+    careGrade1: {
+        backgroundColor: "#7E51FF",
+    },
+    careGrade2: {
+        backgroundColor: "#5182FF",
+    },
+    careGrade3: {
+        backgroundColor: "#75F3A7",
+    },
+    careGrade4: {
+        backgroundColor: "#E4F963",
+    },
+    careGrade5: {
+        backgroundColor: "#FFD951",
+    },
+    careGrade6: {
+        backgroundColor: "#FFA451",
+    },
+    careGrade7: {
+        backgroundColor: "#FF7051",
+    },
+    menuImage: {
+        width: 35,
+        height: 35,
+    },
+    menu: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        paddingHorizontal: 40,
+        marginBottom: 20,
+        borderBottomColor: "#F5F5F5",
+        borderBottomWidth: 1,
+        paddingBottom: 20,
+    },
+    menuItem: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    serviceSetting: {
+        paddingLeft: 20,
+        borderBottomColor: "#F5F5F5",
+        borderBottomWidth: 1,
+        marginBottom: 20,
+    },
+    helpCenter: {
+        paddingLeft: 20,
     },
 });
 
