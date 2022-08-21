@@ -18,7 +18,6 @@ export default function AuthStack() {
                 <Stack.Screen name="Sign In" component={SignInScreen} />
                 <Stack.Screen name="Sign Up" component={SignOutScreen} />
                 <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="MyPage" component={MyPage} />
             </Stack.Navigator>
         </NavigationContainer>
     );

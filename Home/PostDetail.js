@@ -42,12 +42,10 @@ export default function PostDetail({ route, navigation }) {
 
     const loadPost = async () => {
         try {
-            console.log(user.uid);
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
             setContent(post);
-            console.log(post);
         } catch (error) {
             console.log(error.message);
         }
