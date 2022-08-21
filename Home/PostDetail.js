@@ -42,12 +42,10 @@ export default function PostDetail({ route, navigation }) {
 
     const loadPost = async () => {
         try {
-            // console.log(user.uid);
             const docRef = doc(firestore, "posts", id);
             const postRef = await getDoc(docRef);
             const post = postRef.data();
             setContent(post);
-            // console.log(post);
         } catch (error) {
             console.log(error.message);
         }
@@ -118,24 +116,24 @@ export default function PostDetail({ route, navigation }) {
                     <View style={styles.postContents}>
                         <View style={styles.temporary}>
                             <Text style={styles.postType}>{content.type}</Text>
-                            {/* {user.uid == content.writerID ? ( */}
-                            <View style={styles.forWriter}>
-                                <TouchableOpacity
-                                    onPress={() => updatePost(id)}
-                                >
-                                    <Text style={styles.forWriterText}>
-                                        수정
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => deletePost(id)}
-                                >
-                                    <Text style={styles.forWriterText}>
-                                        삭제
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            {/* ) : null} */}
+                            {user.uid == content.writerID ? (
+                                <View style={styles.forWriter}>
+                                    <TouchableOpacity
+                                        onPress={() => updatePost(id)}
+                                    >
+                                        <Text style={styles.forWriterText}>
+                                            수정
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => deletePost(id)}
+                                    >
+                                        <Text style={styles.forWriterText}>
+                                            삭제
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : null}
                         </View>
                         <Text style={styles.postTitle}>{content.title}</Text>
                         <View style={styles.postInfo}>

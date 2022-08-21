@@ -92,13 +92,6 @@ export default function PostForm({ route, navigation }) {
                 image: post.image,
                 createdAt: post.createdAt
             });
-            console.log(
-                "content.deposit",
-                content.deposit,
-                post.deposit,
-                "content.price",
-                content.price
-            );
         } catch (error) {
             console.log(error.message);
         }
