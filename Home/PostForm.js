@@ -115,7 +115,7 @@ export default function PostForm({ route, navigation }) {
     };
 
     const checkBlanks = () => {
-        result = {};
+        var result = {};
         if (content.title == "") {
             result.title = false;
         }
@@ -153,6 +153,7 @@ export default function PostForm({ route, navigation }) {
                     deposit: parseInt(content.deposit),
                     pref_loan: parseInt(content.pref_loan)
                 }).then(() => {
+                    console.log("savePost");
                     navigation.navigate("PostDetail", { key: id });
                     DeviceEventEmitter.emit("toDetail");
                 });
@@ -313,8 +314,9 @@ export default function PostForm({ route, navigation }) {
                 <Button
                     title="저장"
                     style={styles.button}
-                    onPress={checkBlanks}
+                    // onPress={checkBlanks}
                     // onPress={test}
+                    onPress={() => savePost()}
                 ></Button>
                 {confirmed ? null : <Text>입력 내용을 다시 확인해주세요</Text>}
             </ScrollView>
@@ -372,7 +374,7 @@ const styles = StyleSheet.create({
         borderColor: theme.yellow
     },
     photoSelector: {
-        // flexDirection: "row",
+        flexDirection: "row",
         paddingHorizontal: 20,
         paddingTop: 20,
         // justifyContent: "center"
