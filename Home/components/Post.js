@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../../colors";
 import { elapsedTime } from "../functions";
-import React from "react";
+import React, { useState } from "react";
 import Heart from "../../assets/ios-heart-empty.svg";
+import HeartFilled from "../../assets/ios-heart-filled.svg";
 export default function Post({
     id,
     title,
@@ -14,6 +15,29 @@ export default function Post({
     navigation,
     date
 }) {
+    const [isLiked, setIsLiked] = useState(false);
+
+    const updateLikedPostsInfo = async () => {
+        try {
+            console.log("heart clicked");
+            // setLikedPosts([...likedPosts,id]);
+            if (isLiked) {
+                console.log("user id", user.id);
+                setIsLiked(false);
+                updateDoc(doc(firestore, "users", user.id), {
+                    likedPosts: id
+                });
+            } else {
+                console.log("user id", user.id);
+                setIsLiked(true);
+                updateDoc(doc(firestore, "users", user.id), {
+                    likedPosts: true
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
@@ -49,9 +73,23 @@ export default function Post({
                     {type == "빌려요" || type == "빌려드려요" ? (
                         <Text style={styles.postPrice}>{pref_loan}원</Text>
                     ) : null}
-                    <TouchableOpacity>
-                        <Heart style={styles.postHeart} />
-                    </TouchableOpacity>
+                    {isLiked ? (
+                        <TouchableOpacity
+                            onPress={() => {
+                                updateLikedPostsInfo();
+                            }}
+                        >
+                            <HeartFilled style={styles.postHeart} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                updateLikedPostsInfo();
+                            }}
+                        >
+                            <Heart style={styles.postHeart} />
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         </View>
