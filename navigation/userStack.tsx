@@ -8,6 +8,7 @@ import PostDetail from "../Home/PostDetail";
 import MyPage from "../User/MyPage";
 import ProfileSetting from "../User/ProfileSetting";
 import Shopping from "../Shopping/shoppingMain";
+import Info from "../Info/InfoMain";
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,7 @@ export default function UserStack() {
                     name="ProfileSetting"
                     component={ProfileSetting}
                 />
+                <Stack.Screen name="Info" component={Info} />
             </Stack.Navigator>
         </NavigationContainer>
     );
