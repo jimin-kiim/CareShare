@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../../colors";
 import { elapsedTime } from "../functions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heart from "../../assets/ios-heart-empty.svg";
 import HeartFilled from "../../assets/ios-heart-filled.svg";
 import { getAuth } from "firebase/auth";
@@ -10,7 +10,7 @@ import {
     getFirestore,
     // collection,
     // addDoc,
-    // getDoc,
+    getDoc,
     arrayUnion,
     arrayRemove,
     doc,
@@ -32,9 +32,36 @@ export default function Post({
 }) {
     const firestore = getFirestore();
     const { user } = useAuthentication();
-    const current_user = auth.currentUser;
-    // const [likedPosts, setLikedPosts] = useState([]);
     const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(async () => {
+        try {
+            // console.log(user.uid);
+            const docSnap = await getDoc(doc(firestore, "users", user.uid));
+            const likedPosts = [];
+            if (docSnap) {
+                const fetchedArrray = docSnap.data().likedPosts;
+                fetchedArrray.forEach((object) => {
+                    likedPosts.push(object.id);
+                });
+                console.log(likedPosts);
+                if (likedPosts.includes(id)) {
+                    setIsLiked(true);
+                    console.log(id, "true");
+                } else {
+                    console.log(id, "false");
+                }
+            } else {
+                console.log("Document does not exist");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        // if (route.params.key) {
+        //     loadPost(route.params.key);
+        //     setIsLiked(true);
+        // }
+    }, []);
 
     const updateLikedPostsInfo = async () => {
         try {
@@ -53,16 +80,6 @@ export default function Post({
                     likedPosts: arrayUnion({ id })
                 });
             }
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    const saveLikedPostsInfo = async () => {
-        try {
-            updateDoc(doc(firestore, "users", user.id), {
-                likedPosts: likedPosts
-            });
         } catch (error) {
             console.log(error.message);
         }
