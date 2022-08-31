@@ -4,20 +4,15 @@ import { elapsedTime } from "../functions";
 import React, { useEffect, useState } from "react";
 import Heart from "../../assets/ios-heart-empty.svg";
 import HeartFilled from "../../assets/ios-heart-filled.svg";
-import { getAuth } from "firebase/auth";
 import { useAuthentication } from "../../utils/hooks/useAuthentication";
 import {
     getFirestore,
-    // collection,
-    // addDoc,
     getDoc,
     arrayUnion,
     arrayRemove,
     doc,
     updateDoc
 } from "firebase/firestore";
-
-const auth = getAuth();
 
 export default function Post({
     id,
@@ -36,15 +31,13 @@ export default function Post({
 
     useEffect(async () => {
         try {
-            // console.log(user.uid);
             const docSnap = await getDoc(doc(firestore, "users", user.uid));
             const likedPosts = [];
             if (docSnap) {
-                const fetchedArrray = docSnap.data().likedPosts;
-                fetchedArrray.forEach((object) => {
+                const fetchedArray = docSnap.data().likedPosts;
+                fetchedArray.forEach((object) => {
                     likedPosts.push(object.id);
                 });
-                console.log(likedPosts);
                 if (likedPosts.includes(id)) {
                     setIsLiked(true);
                     console.log(id, "true");
@@ -57,24 +50,17 @@ export default function Post({
         } catch (error) {
             console.log(error);
         }
-        // if (route.params.key) {
-        //     loadPost(route.params.key);
-        //     setIsLiked(true);
-        // }
     }, []);
 
     const updateLikedPostsInfo = async () => {
+        console.log("Heart clicked", isLiked);
         try {
-            console.log("heart clicked");
-            // setLikedPosts([...likedPosts,id]);
             if (isLiked) {
-                console.log("arrayRemove", id);
                 setIsLiked(false);
                 updateDoc(doc(firestore, "users", user.uid), {
                     likedPosts: arrayRemove({ id })
                 });
             } else {
-                console.log("arrayUnion", id);
                 setIsLiked(true);
                 updateDoc(doc(firestore, "users", user.uid), {
                     likedPosts: arrayUnion({ id })

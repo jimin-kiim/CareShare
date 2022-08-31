@@ -47,6 +47,7 @@ const Home = ({ navigation }) => {
     };
 
     const loadPosts = async () => {
+        console.log("==load posts");
         try {
             const postDoc = await getDocs(collection(firestore, "posts"));
             const postsFetched = [];
