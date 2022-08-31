@@ -106,23 +106,26 @@ export default function Post({
                     {type == "빌려요" || type == "빌려드려요" ? (
                         <Text style={styles.postPrice}>{pref_loan}원</Text>
                     ) : null}
-                    {isLiked ? (
-                        <TouchableOpacity
-                            onPress={() => {
-                                updateLikedPostsInfo();
-                            }}
-                        >
-                            <HeartFilled style={styles.postHeart} />
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            onPress={() => {
-                                updateLikedPostsInfo();
-                            }}
-                        >
-                            <Heart style={styles.postHeart} />
-                        </TouchableOpacity>
-                    )}
+                    {
+                        (user,
+                        isLiked ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    updateLikedPostsInfo();
+                                }}
+                            >
+                                <HeartFilled style={styles.postHeart} />
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    updateLikedPostsInfo();
+                                }}
+                            >
+                                <Heart style={styles.postHeart} />
+                            </TouchableOpacity>
+                        ))
+                    }
                 </View>
             </View>
         </View>

@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
         borderColor: theme.yellow
     },
     photoSelector: {
-        // flexDirection: "row",
+        flexDirection: "row",
         paddingHorizontal: 20,
         paddingTop: 20,
         // justifyContent: "center"
