@@ -4,6 +4,21 @@ import { elapsedTime } from "../functions";
 import React, { useState } from "react";
 import Heart from "../../assets/ios-heart-empty.svg";
 import HeartFilled from "../../assets/ios-heart-filled.svg";
+import { getAuth } from "firebase/auth";
+import { useAuthentication } from "../../utils/hooks/useAuthentication";
+import {
+    getFirestore,
+    // collection,
+    // addDoc,
+    // getDoc,
+    arrayUnion,
+    arrayRemove,
+    doc,
+    updateDoc
+} from "firebase/firestore";
+
+const auth = getAuth();
+
 export default function Post({
     id,
     title,
@@ -15,6 +30,10 @@ export default function Post({
     navigation,
     date
 }) {
+    const firestore = getFirestore();
+    const { user } = useAuthentication();
+    const current_user = auth.currentUser;
+    // const [likedPosts, setLikedPosts] = useState([]);
     const [isLiked, setIsLiked] = useState(false);
 
     const updateLikedPostsInfo = async () => {
@@ -22,22 +41,33 @@ export default function Post({
             console.log("heart clicked");
             // setLikedPosts([...likedPosts,id]);
             if (isLiked) {
-                console.log("user id", user.id);
+                console.log("arrayRemove", id);
                 setIsLiked(false);
-                updateDoc(doc(firestore, "users", user.id), {
-                    likedPosts: id
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayRemove({ id })
                 });
             } else {
-                console.log("user id", user.id);
+                console.log("arrayUnion", id);
                 setIsLiked(true);
-                updateDoc(doc(firestore, "users", user.id), {
-                    likedPosts: true
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayUnion({ id })
                 });
             }
         } catch (error) {
             console.log(error.message);
         }
     };
+
+    const saveLikedPostsInfo = async () => {
+        try {
+            updateDoc(doc(firestore, "users", user.id), {
+                likedPosts: likedPosts
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
