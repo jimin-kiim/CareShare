@@ -65,6 +65,9 @@ export default function NavigationBar({
                             ? { color: theme.textDark }
                             : { color: theme.iconGray }
                     }
+                    onPress={() =>
+                        navigation.navigate("Shopping", { navigation })
+                    }
                 >
                     쇼핑
                 </Text>

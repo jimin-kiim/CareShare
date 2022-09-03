@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     DeviceEventEmitter,
     Button,
+    Modal,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import NavigationBar from "../navigationBar";
@@ -302,6 +303,14 @@ const ProfileSetting = ({ navigation }) => {
                             })}
                         </Picker>
                     </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {}}
+                    >
+                        <Text>회원 탈퇴</Text>
+                    </Modal>
                     <Button
                         title="Update"
                         buttonStyle={styles.control}
