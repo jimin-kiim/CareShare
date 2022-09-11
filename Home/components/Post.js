@@ -1,8 +1,19 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { theme } from "../../colors";
 import { elapsedTime } from "../functions";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heart from "../../assets/ios-heart-empty.svg";
+import HeartFilled from "../../assets/ios-heart-filled.svg";
+import { useAuthentication } from "../../utils/hooks/useAuthentication";
+import {
+    getFirestore,
+    getDoc,
+    arrayUnion,
+    arrayRemove,
+    doc,
+    updateDoc
+} from "firebase/firestore";
+
 export default function Post({
     id,
     title,
@@ -14,6 +25,52 @@ export default function Post({
     navigation,
     date
 }) {
+    const firestore = getFirestore();
+    const { user } = useAuthentication();
+    const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(async () => {
+        try {
+            const docSnap = await getDoc(doc(firestore, "users", user.uid));
+            const likedPosts = [];
+            if (docSnap) {
+                const fetchedArray = docSnap.data().likedPosts;
+                fetchedArray.forEach((object) => {
+                    likedPosts.push(object.id);
+                });
+                if (likedPosts.includes(id)) {
+                    setIsLiked(true);
+                    console.log(id, "true");
+                } else {
+                    console.log(id, "false");
+                }
+            } else {
+                console.log("Document does not exist");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+
+    const updateLikedPostsInfo = async () => {
+        console.log("Heart clicked", isLiked);
+        try {
+            if (isLiked) {
+                setIsLiked(false);
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayRemove({ id })
+                });
+            } else {
+                setIsLiked(true);
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayUnion({ id })
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <View style={styles.post} key={id}>
             <TouchableOpacity
@@ -49,9 +106,26 @@ export default function Post({
                     {type == "빌려요" || type == "빌려드려요" ? (
                         <Text style={styles.postPrice}>{pref_loan}원</Text>
                     ) : null}
-                    <TouchableOpacity>
-                        <Heart style={styles.postHeart} />
-                    </TouchableOpacity>
+                    {
+                        (user,
+                        isLiked ? (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    updateLikedPostsInfo();
+                                }}
+                            >
+                                <HeartFilled style={styles.postHeart} />
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    updateLikedPostsInfo();
+                                }}
+                            >
+                                <Heart style={styles.postHeart} />
+                            </TouchableOpacity>
+                        ))
+                    }
                 </View>
             </View>
         </View>

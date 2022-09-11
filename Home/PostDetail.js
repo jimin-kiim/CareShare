@@ -13,13 +13,22 @@ import {
 import { elapsedTime } from "./functions";
 import { theme } from "../colors";
 import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
+import {
+    getFirestore,
+    arrayUnion,
+    arrayRemove,
+    doc,
+    getDoc,
+    deleteDoc,
+    updateDoc
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import Arrow from "../assets/ios-arrow-down.svg";
 import Home from "../assets/ios-home.svg";
 import Share from "../assets/ios-share-alt.svg";
 import TempProfile from "../assets/Ellipse 2.svg";
 import Heart from "../assets/ios-heart-empty.svg";
+import HeartFilled from "../assets/ios-heart-filled.svg";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const auth = getAuth();
@@ -27,6 +36,7 @@ export default function PostDetail({ route, navigation }) {
     const user = auth.currentUser;
     const firestore = getFirestore();
     const [content, setContent] = useState({});
+    const [isLiked, setIsLiked] = useState(false);
     const id = route.params.key;
 
     useEffect(() => {
@@ -46,6 +56,22 @@ export default function PostDetail({ route, navigation }) {
             const postRef = await getDoc(docRef);
             const post = postRef.data();
             setContent(post);
+            const docSnap = await getDoc(doc(firestore, "users", user.uid));
+            const likedPosts = [];
+            if (docSnap) {
+                const fetchedArray = docSnap.data().likedPosts;
+                fetchedArray.forEach((object) => {
+                    likedPosts.push(object.id);
+                });
+                if (likedPosts.includes(id)) {
+                    setIsLiked(true);
+                    console.log(id, "true");
+                } else {
+                    console.log(id, "false");
+                }
+            } else {
+                console.log("Document does not exist");
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -80,6 +106,25 @@ export default function PostDetail({ route, navigation }) {
             ]);
         }
     };
+
+    const updateLikedPostsInfo = async () => {
+        try {
+            if (isLiked) {
+                setIsLiked(false);
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayRemove({ id })
+                });
+            } else {
+                setIsLiked(true);
+                updateDoc(doc(firestore, "users", user.uid), {
+                    likedPosts: arrayUnion({ id })
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <>
             <View style={styles.header}>
@@ -153,9 +198,23 @@ export default function PostDetail({ route, navigation }) {
             </ScrollView>
             <View style={styles.contact}>
                 <View style={styles.contactLeft}>
-                    <TouchableOpacity>
-                        <Heart style={styles.postHeart} />
-                    </TouchableOpacity>
+                    {isLiked ? (
+                        <TouchableOpacity
+                            onPress={() => {
+                                updateLikedPostsInfo();
+                            }}
+                        >
+                            <HeartFilled style={styles.postHeart} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                updateLikedPostsInfo();
+                            }}
+                        >
+                            <Heart style={styles.postHeart} />
+                        </TouchableOpacity>
+                    )}
 
                     {content.type == "빌려요" ? (
                         <View>
