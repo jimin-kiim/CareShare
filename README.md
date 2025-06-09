@@ -10,9 +10,3 @@ many people need support to use them. However, there are many people who are not
 
 CareShare is a platform designed for them. It aims to reduce the financial burden of using unused medical aids by renting, sharing, and trading. 
 It also includes functions such as collecting information about medical support services and comparing prices of medical aids on the market.
-
-### My Role
-- Team Leader
-- Planned Project and Designed Architecture
-- Developed Membership Registration Feature and Membership Modification Feature
-- Developed Social Login
